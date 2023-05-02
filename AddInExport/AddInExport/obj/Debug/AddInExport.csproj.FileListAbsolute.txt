@@ -1,0 +1,9 @@
+C:\ProgramData\Autodesk\Inventor 2019\Addins\AddInExport\AddInExport.dll
+C:\ProgramData\Autodesk\Inventor 2019\Addins\AddInExport\AddInExport.pdb
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.csproj.AssemblyReference.cache
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.csproj.CoreCompileInputs.cache
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.csproj.CopyComplete
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.dll
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.pdb
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\InvAddIn.Properties.Resources.resources
+C:\Users\SeaRook\Desktop\InventorExport\AddInExport\AddInExport\obj\Debug\AddInExport.csproj.GenerateResource.cache
