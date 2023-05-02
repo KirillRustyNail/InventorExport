@@ -102,10 +102,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AddInExport.X.manifest" />
+    <None Include="AddInExport.X.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Autodesk.AddInExport.Inventor.addin" />
+    <None Include="Autodesk.AddInExport.Inventor.addin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
