@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Collections;
 using Inventor;
 
 
@@ -20,6 +21,7 @@ namespace My_CSharp_AddIn
             try
             {
                 frm = new TestForm(Globals.invApp);
+                
                 frm.Show();
             }
             catch (Exception e)
