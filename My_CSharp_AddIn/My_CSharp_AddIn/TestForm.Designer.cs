@@ -45,7 +45,7 @@ namespace My_CSharp_AddIn
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(71, 95);
+            this.button1.Location = new System.Drawing.Point(52, 458);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(99, 23);
             this.button1.TabIndex = 1;
@@ -57,7 +57,7 @@ namespace My_CSharp_AddIn
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 150);
+            this.ClientSize = new System.Drawing.Size(322, 532);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Name = "TestForm";
