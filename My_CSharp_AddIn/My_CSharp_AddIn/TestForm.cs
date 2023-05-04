@@ -65,9 +65,12 @@ namespace My_CSharp_AddIn
                     text += " " + tree[i] + "\n";
                 }
 
+
                 MessageBox.Show(text);
 
                 tree.Clear();
+
+                CreadHint(1, 1, 1);
 
             }
             catch(Exception ex)
@@ -127,7 +130,7 @@ namespace My_CSharp_AddIn
                         if (faceProxy != null)
                         {
 
-                            MessageBox.Show(mateConstraint.EntityOne.ToString());
+                            
                             var a = faceProxy.Geometry;
                             var b = faceProxy.Vertices;
                             var c = faceProxy.NativeObject.Vertices;
@@ -137,12 +140,13 @@ namespace My_CSharp_AddIn
                             foreach (Inventor.Vertex vertex in faceProxy.NativeObject.Vertices)
                             {
                                 var v =vertex.Point.X;
-                                MessageBox.Show("Vertex: " +vertex.Point.X + " "+ vertex.Point.Y + " "+ vertex.Point.Z+" ");
+                               // MessageBox.Show("Vertex: " +vertex.Point.X + " "+ vertex.Point.Y + " "+ vertex.Point.Z+" ");
                             }
                         }
 
 
                     }
+
                    /* Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
                     Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;
                     Inventor.InsertConstraint insertConstraint = (Inventor.InsertConstraint)oAsscon;*/
@@ -154,11 +158,53 @@ namespace My_CSharp_AddIn
                 }
 
                 
-
-
-
-
+               
             }
+
+        }
+
+
+
+        private void CreadHint(double x, double y, double z)
+        {
+            /*Inventor.TransientGeometry oTg = m_inventorAplication.TransientGeometry;
+
+            Inventor.AssemblyDocument oDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+
+            Inventor.ComponentDefinition oCompDef = (Inventor.ComponentDefinition)oDoc.ComponentDefinition;
+
+            Inventor.PlanarSketch oSketch = oCompDef.Sketches.Add(oCompDef.WorkPlanes[2]);
+
+              oSketch.Name = "Connect";
+
+              Inventor.Point2d centre = oTg.CreatePoint2d(x, y);
+
+              Inventor.SketchCircle cicle = oSketch.SketchCircles.AddByCenterRadius(centre, 1);
+
+              Inventor.Profile oProf = oSketch.Profiles.AddForSolid();
+
+              Inventor.ExtrudeDefinition oExDef = oCompDef.Features.ExtrudeFeatures.CreateExtrudeDefinition(oProf, Inventor.PartFeatureOperationEnum.kJoinOperation);
+
+              oExDef.SetDistanceExtent(1, Inventor.PartFeatureExtentDirectionEnum.kPositiveExtentDirection);
+
+              oCompDef.Features.ExtrudeFeatures.Add(oExDef);
+
+            *//*Inventor.Point centre = oTg.CreatePoint(x, y, z);
+            Inventor.Sphere Sphere = m_inventorAplication.TransientGeometry.CreateSphere(centre,1);*//*
+
+
+            Inventor.Matrix sa = m_inventorAplication.TransientGeometry.CreateMatrix();
+
+
+            Inventor.ComponentOccurrence hintA = oDoc.ComponentDefinition.Occurrences.AddByComponentDefinition(Sphere, sa);
+
+            
+
+            Inventor.Vector oTrans = oTg.CreateVector(1, 1, 1);
+            sa.SetTranslation(oTrans);
+
+*/
+
 
         }
     }
