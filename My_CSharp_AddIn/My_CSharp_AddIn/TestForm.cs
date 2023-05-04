@@ -111,13 +111,55 @@ namespace My_CSharp_AddIn
 
                 Inventor.ComponentOccurrence One = (Inventor.ComponentOccurrence)oAsscon.OccurrenceOne;
                 Inventor.ComponentOccurrence Two = (Inventor.ComponentOccurrence)oAsscon.OccurrenceTwo;
+                
                 if (One != null && Two != null)
                 {
+
+                   
+
+                    var Type = oAsscon.GetType();
+
+                    if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
+                    {
+                        Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
+
+                        Inventor.FaceProxy faceProxy = (Inventor.FaceProxy)mateConstraint.EntityTwo;
+                        if (faceProxy != null)
+                        {
+
+                            MessageBox.Show(mateConstraint.EntityOne.ToString());
+                            var a = faceProxy.Geometry;
+                            var b = faceProxy.Vertices;
+                            var c = faceProxy.NativeObject.Vertices;
+
+                            
+
+                            foreach (Inventor.Vertex vertex in faceProxy.NativeObject.Vertices)
+                            {
+                                var v =vertex.Point.X;
+                                MessageBox.Show("Vertex: " +vertex.Point.X + " "+ vertex.Point.Y + " "+ vertex.Point.Z+" ");
+                            }
+                        }
+
+
+                    }
+                   /* Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
+                    Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;
+                    Inventor.InsertConstraint insertConstraint = (Inventor.InsertConstraint)oAsscon;*/
+
+                   
+
                     tree.Add("        {" + One._DisplayName);
                     tree.Add("        " + Two._DisplayName + "}"+"\n");
                 }
+
+                
+
+
+
+
             }
-        
+
         }
     }
 
