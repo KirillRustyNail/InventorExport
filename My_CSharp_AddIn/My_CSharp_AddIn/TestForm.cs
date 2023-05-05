@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using Microsoft.VisualBasic.Compatibility.VB6;
 
 namespace My_CSharp_AddIn
 {
@@ -206,6 +207,73 @@ namespace My_CSharp_AddIn
 */
 
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+
+            string PATH;
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "Select Folder";
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                PATH = fbd.SelectedPath;
+            }
+            else
+            {
+                MessageBox.Show("Must specify DXF path");
+                return;
+            }
+
+            Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
+            Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
+            Inventor.TranslatorAddIn addIn = null;
+
+            foreach (Inventor.ApplicationAddIn oAppAddin in m_inventorAplication.ApplicationAddIns)
+            {
+                if (oAppAddin.DisplayName == "Translator: OBJ Export")
+                {
+                    string s = "yes";
+                    addIn = (Inventor.TranslatorAddIn)oAppAddin;
+                }
+            }
+
+           
+
+
+
+            oContext.Type = Inventor.IOMechanismEnum.kFileBrowseIOMechanism;
+
+            Inventor.NameValueMap oOptions = oTO.CreateNameValueMap();
+
+            Inventor.DataMedium oDataMedium = oTO.CreateDataMedium();
+
+            oOptions.Value["ExportUnits"] = 0;
+
+            oOptions.Value["Resolution"] = 3;
+
+            oOptions.Value["SurfaceDeviation"] = 0.16;
+
+            oOptions.Value["NormalDeviation"] = 1500;
+
+            oOptions.Value["MaxEdgeLength"] = 100000;
+
+            oOptions.Value["AspectRatio"] = 2150;
+
+            oOptions.Value["ExportFileStructure"] = 1;
+
+            oDataMedium.FileName = System.IO.Path.ChangeExtension(PATH +"\\Parts\\" +oAssDoc.DisplayName, ".obj");
+
+            try
+            {
+                addIn.SaveCopyAs(oAssDoc, oContext, oOptions, oDataMedium);
+            }
+            catch (Exception ex )
+            {
+
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 
