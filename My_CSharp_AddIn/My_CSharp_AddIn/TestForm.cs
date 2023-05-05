@@ -46,19 +46,10 @@ namespace My_CSharp_AddIn
 
                 Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
 
-               /*
-                Inventor.ComponentOccurrence test = (Inventor.ComponentOccurrence)m_inventorAplication.ActiveDocument.SelectSet[1];
+             
 
 
-                // Получаем координаты выделенной детали
-                double x = test.RangeBox.MaxPoint.X;
-                double y = test.RangeBox.MaxPoint.Y;
-                double z = test.RangeBox.MaxPoint.Z;*/
-
-                //essageBox.Show(x + " " + y + " " + z);
-
-
-                getComponent(ASs.ComponentDefinition.Occurrences);
+                getComponent(ASs.ComponentDefinition.Occurrences, "no");
 
                 String text= "";
                 for (int i = 0; i < tree.Count(); i++)
@@ -66,6 +57,7 @@ namespace My_CSharp_AddIn
                     text += " " + tree[i] + "\n";
                 }
 
+                richTextBox1.Text = text;
 
                 MessageBox.Show(text);
 
@@ -82,7 +74,7 @@ namespace My_CSharp_AddIn
 
 
         }
-        private void getComponent(Inventor.ComponentOccurrences incollect)
+        private void getComponent(Inventor.ComponentOccurrences incollect, string SUB)
         {
             IEnumerator Em = incollect.GetEnumerator();
 
@@ -96,9 +88,12 @@ namespace My_CSharp_AddIn
                 double y = objOc.RangeBox.MaxPoint.Y;
                 double z = objOc.RangeBox.MaxPoint.Z;
 
-                tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z );
+                if(SUB != "Sub")  tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z);
+                else tree.Add("        "+objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " + x + " |y= " + y + " |z= " + z);
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
+
+                getComponent((Inventor.ComponentOccurrences)objOc.SubOccurrences , "Sub");
 
                 getConstrains(objconEnum);
             }
@@ -228,20 +223,11 @@ namespace My_CSharp_AddIn
 
             Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
             Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
-            Inventor.TranslatorAddIn addIn = null;
 
-            foreach (Inventor.ApplicationAddIn oAppAddin in m_inventorAplication.ApplicationAddIns)
-            {
-                if (oAppAddin.DisplayName == "Translator: OBJ Export")
-                {
-                    string s = "yes";
-                    addIn = (Inventor.TranslatorAddIn)oAppAddin;
-                }
-            }
-
-           
+            Inventor.ApplicationAddIn oAppAddin = m_inventorAplication.ApplicationAddIns.ItemById["{F539FB09-FC01-4260-A429-1818B14D6BAC}"];
 
 
+            Inventor.TranslatorAddIn addIn = (Inventor.TranslatorAddIn)oAppAddin;
 
             oContext.Type = Inventor.IOMechanismEnum.kFileBrowseIOMechanism;
 
