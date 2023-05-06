@@ -35,11 +35,22 @@ namespace My_CSharp_AddIn
 
         }
 
+        void display()
+        {
+            String text = "";
+            for (int i = 0; i < tree.Count(); i++)
+            {
+                text += " " + tree[i] + "\n";
+            }
+
+            richTextBox1.Text = text;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             string Name = m_inventorAplication.ActiveDocument.DisplayName;
 
-            label1.Text = Name;
+           
 
             try
             {
@@ -51,17 +62,14 @@ namespace My_CSharp_AddIn
 
                 getComponent(ASs.ComponentDefinition.Occurrences, "no");
 
-                String text= "";
-                for (int i = 0; i < tree.Count(); i++)
-                {
-                    text += " " + tree[i] + "\n";
-                }
+                display();
 
-                richTextBox1.Text = text;
-
-                MessageBox.Show(text);
+                //MessageBox.Show(text);
 
                 tree.Clear();
+
+                AssemblyRecord assemblyRecord = new AssemblyRecord();
+                assemblyRecord.GetAssemble();
 
                 CreadHint(1, 1, 1);
 
@@ -95,6 +103,8 @@ namespace My_CSharp_AddIn
 
                 getComponent((Inventor.ComponentOccurrences)objOc.SubOccurrences , "Sub");
 
+                display();
+
                 getConstrains(objconEnum);
             }
         }
@@ -108,6 +118,8 @@ namespace My_CSharp_AddIn
                 oAsscon = (Inventor.AssemblyConstraint)objconEnum.Current;
                 tree.Add("   "+oAsscon.Name);
 
+                display();
+
                 Inventor.ComponentOccurrence One = (Inventor.ComponentOccurrence)oAsscon.OccurrenceOne;
                 Inventor.ComponentOccurrence Two = (Inventor.ComponentOccurrence)oAsscon.OccurrenceTwo;
                 
@@ -118,7 +130,7 @@ namespace My_CSharp_AddIn
 
                     var Type = oAsscon.GetType();
 
-                    if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
+                   /* if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
                     {
                         Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
 
@@ -141,7 +153,7 @@ namespace My_CSharp_AddIn
                         }
 
 
-                    }
+                    }*/
 
                    /* Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
                     Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;

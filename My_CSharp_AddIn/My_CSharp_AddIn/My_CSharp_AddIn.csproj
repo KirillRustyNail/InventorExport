@@ -103,9 +103,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AssemblyRecord.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="CommandFunctions.cs" />
-    <Compile Include="Part.cs" />
+    <Compile Include="Models\Assembly.cs" />
+    <Compile Include="Models\Component.cs" />
+    <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\Coordinates.cs" />
     <Compile Include="TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
