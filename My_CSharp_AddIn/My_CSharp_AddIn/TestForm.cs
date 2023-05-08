@@ -60,7 +60,7 @@ namespace My_CSharp_AddIn
              
 
 
-                getComponent(ASs.ComponentDefinition.Occurrences, "no");
+                //getComponent(ASs.ComponentDefinition.Occurrences, "no");
 
                 display();
 
@@ -71,7 +71,9 @@ namespace My_CSharp_AddIn
                 AssemblyRecord assemblyRecord = new AssemblyRecord();
                 assemblyRecord.GetAssemble();
 
-                CreadHint(1, 1, 1);
+                
+
+                //Simple(ASs.ComponentDefinition.Occurrences);
 
             }
             catch(Exception ex)
@@ -82,11 +84,62 @@ namespace My_CSharp_AddIn
 
 
         }
+
+        void Simple(Inventor.ComponentOccurrences incollect)
+        {
+            IEnumerator Em = incollect.GetEnumerator();
+            Inventor.ComponentOccurrence objOc;
+            Inventor.PartDocument desiredPart = null;
+            Inventor.FilletFeature oFilletF = null;
+
+            while (Em.MoveNext() == true)
+            {
+                objOc = (Inventor.ComponentOccurrence)Em.Current;
+
+                if (objOc.DefinitionDocumentType == Inventor.DocumentTypeEnum.kPartDocumentObject)
+                {
+                    desiredPart = (Inventor.PartDocument)objOc.Definition.Document;
+
+                    foreach (Inventor.PartFeature feature in desiredPart.ComponentDefinition.Features)
+                    {
+                        if (feature is Inventor.FilletFeature)
+                        { 
+                            try
+                            {
+
+                                oFilletF = (Inventor.FilletFeature)feature;
+                                Inventor.ParametersEnumerator asds = oFilletF.Parameters;
+                                Inventor.Parameter One = asds[1];
+
+                                double val = Convert.ToDouble(One.Value);
+
+                                if (val < 0.8)
+                                {
+                                    oFilletF.Delete();
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                                MessageBox.Show("проблема с " + objOc._DisplayName + " В " + oFilletF.Name);
+                            }
+
+                        }
+                    }
+                }
+
+
+                Simple((Inventor.ComponentOccurrences)objOc.SubOccurrences);
+            }
+        }
         private void getComponent(Inventor.ComponentOccurrences incollect, string SUB)
         {
             IEnumerator Em = incollect.GetEnumerator();
 
             Inventor.ComponentOccurrence objOc;
+
+            Inventor.PartDocument desiredPart = null;
+            Inventor.FilletFeature oFilletF = null;
 
             while (Em.MoveNext() == true)
             {
@@ -96,7 +149,9 @@ namespace My_CSharp_AddIn
                 double y = objOc.RangeBox.MaxPoint.Y;
                 double z = objOc.RangeBox.MaxPoint.Z;
 
-                if(SUB != "Sub")  tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z);
+                
+
+                if (SUB != "Sub")  tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z);
                 else tree.Add("        "+objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " + x + " |y= " + y + " |z= " + z);
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
@@ -173,48 +228,7 @@ namespace My_CSharp_AddIn
 
 
 
-        private void CreadHint(double x, double y, double z)
-        {
-            /*Inventor.TransientGeometry oTg = m_inventorAplication.TransientGeometry;
-
-            Inventor.AssemblyDocument oDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-
-            Inventor.ComponentDefinition oCompDef = (Inventor.ComponentDefinition)oDoc.ComponentDefinition;
-
-            Inventor.PlanarSketch oSketch = oCompDef.Sketches.Add(oCompDef.WorkPlanes[2]);
-
-              oSketch.Name = "Connect";
-
-              Inventor.Point2d centre = oTg.CreatePoint2d(x, y);
-
-              Inventor.SketchCircle cicle = oSketch.SketchCircles.AddByCenterRadius(centre, 1);
-
-              Inventor.Profile oProf = oSketch.Profiles.AddForSolid();
-
-              Inventor.ExtrudeDefinition oExDef = oCompDef.Features.ExtrudeFeatures.CreateExtrudeDefinition(oProf, Inventor.PartFeatureOperationEnum.kJoinOperation);
-
-              oExDef.SetDistanceExtent(1, Inventor.PartFeatureExtentDirectionEnum.kPositiveExtentDirection);
-
-              oCompDef.Features.ExtrudeFeatures.Add(oExDef);
-
-            *//*Inventor.Point centre = oTg.CreatePoint(x, y, z);
-            Inventor.Sphere Sphere = m_inventorAplication.TransientGeometry.CreateSphere(centre,1);*//*
-
-
-            Inventor.Matrix sa = m_inventorAplication.TransientGeometry.CreateMatrix();
-
-
-            Inventor.ComponentOccurrence hintA = oDoc.ComponentDefinition.Occurrences.AddByComponentDefinition(Sphere, sa);
-
-            
-
-            Inventor.Vector oTrans = oTg.CreateVector(1, 1, 1);
-            sa.SetTranslation(oTrans);
-
-*/
-
-
-        }
+       
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -233,7 +247,11 @@ namespace My_CSharp_AddIn
                 return;
             }
 
-            Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
+            ExportAlgoritm export = new ExportAlgoritm();
+
+            export.DoExport(PATH);
+
+           /* Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
             Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
 
             Inventor.ApplicationAddIn oAppAddin = m_inventorAplication.ApplicationAddIns.ItemById["{F539FB09-FC01-4260-A429-1818B14D6BAC}"];
@@ -271,7 +289,7 @@ namespace My_CSharp_AddIn
             {
 
                 MessageBox.Show(ex.Message);
-            }
+            }*/
         }
     }
 

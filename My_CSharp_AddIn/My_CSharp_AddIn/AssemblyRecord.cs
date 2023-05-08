@@ -53,6 +53,7 @@ namespace My_CSharp_AddIn
 
             Inventor.ComponentOccurrence objOc;
             Coordinates ComponentCoordinates;
+            Coordinates Rotations;
             Assembly SubAssembly = null;
             Assembly TempSubAssembly = null;
             List<Component> SubComponents = new List<Component>();
@@ -63,10 +64,46 @@ namespace My_CSharp_AddIn
                 TempSubAssembly = null;
                 ComponentCoordinates = null;
                 isAssemble = false;
+                Rotations = null;
 
                 objOc = (Inventor.ComponentOccurrence)Em.Current;
-                    
-                ComponentCoordinates = new Coordinates(objOc.RangeBox.MaxPoint.X, objOc.RangeBox.MaxPoint.Y, objOc.RangeBox.MaxPoint.Z);
+
+                Inventor.MassProperties mass = objOc.MassProperties;
+
+                double centerX = mass.CenterOfMass.X * 10.0;
+                double centerY = mass.CenterOfMass.Y * 10.0;
+                double centerZ = mass.CenterOfMass.Z * 10.0;
+
+                var ptX = objOc.Transformation.Translation.X * 10.0;
+                var ptY = objOc.Transformation.Translation.Y * 10.0;
+                var ptZ = objOc.Transformation.Translation.Z * 10.0;
+
+                Inventor.Matrix matrix = objOc.Transformation;
+
+                double rotationAngle = Math.Acos(matrix.Cell[1, 1]) * 180 / Math.PI;
+
+                double xRotation, yRotation, zRotation;
+
+                double x1 = matrix.Cell[1, 1];
+                double x2 = matrix.Cell[1, 2];
+                double x3 = matrix.Cell[1, 3];
+                double y1 = matrix.Cell[2, 1];
+                double y2 = matrix.Cell[2, 2];
+                double y3 = matrix.Cell[2, 3];
+                double z1 = matrix.Cell[3, 1];
+                double z2 = matrix.Cell[3, 2];
+                double z3 = matrix.Cell[3, 3];
+
+                double xRotationRadians = Math.Atan2(y3, z3);
+                double yRotationRadians = Math.Atan2(-x3, Math.Sqrt(x1 * x1 + x2 * x2));
+                double zRotationRadians = Math.Atan2(x2, x1); // НЕверно
+
+                xRotation = -xRotationRadians * (180 / Math.PI);
+                yRotation = yRotationRadians * (180 / Math.PI);
+                zRotation = zRotationRadians * (180 / Math.PI);
+
+                ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
+                Rotations = new Coordinates(xRotation, yRotation, zRotation);
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
                 Inventor.ComponentOccurrences temp = (Inventor.ComponentOccurrences)objOc.SubOccurrences;
@@ -83,12 +120,13 @@ namespace My_CSharp_AddIn
 
                 if (SUB != "Sub")
                 {
-                    Component currentComponent = new Component(objOc._DisplayName, ComponentCoordinates, connections, isAssemble, TempSubAssembly);
+
+                    Component currentComponent = new Component(objOc._DisplayName.Replace(":", "_"), ComponentCoordinates,Rotations, connections, isAssemble, TempSubAssembly);
                     components.Add(currentComponent);
                 }
                 else 
                 {
-                    Component currentComponent = new Component(objOc._DisplayName, ComponentCoordinates, connections, isAssemble, TempSubAssembly);
+                    Component currentComponent = new Component(objOc._DisplayName.Replace(":", "_"), ComponentCoordinates, Rotations, connections, isAssemble, TempSubAssembly);
                     SubComponents.Add(currentComponent);
                 }
                 

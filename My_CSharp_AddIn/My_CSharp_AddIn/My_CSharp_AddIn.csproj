@@ -106,6 +106,7 @@
     <Compile Include="AssemblyRecord.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="CommandFunctions.cs" />
+    <Compile Include="ExportAlgoritm.cs" />
     <Compile Include="Models\Assembly.cs" />
     <Compile Include="Models\Component.cs" />
     <Compile Include="Models\Connection.cs" />

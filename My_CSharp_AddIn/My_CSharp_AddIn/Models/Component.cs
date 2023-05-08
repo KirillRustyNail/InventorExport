@@ -12,15 +12,17 @@ namespace My_CSharp_AddIn.Models
         public string Name { get; set; }
         
         public Coordinates Coordinates { get; set; }
+        public Coordinates Rotation { get;set; }
         public List<Connection> Connections { get; set; }
         public bool IsAssembly { get; set; }
         public Assembly Assembly { get; set; }
 
 
-        public Component(string name, Coordinates cor, List<Connection> connections, bool isAssemble, Assembly assembly)
+        public Component(string name, Coordinates cor, Coordinates rotation, List<Connection> connections, bool isAssemble, Assembly assembly)
         {
             Name = name;            
             Coordinates = cor;
+            Rotation = rotation;
             Connections = connections;
             IsAssembly = isAssemble;
             Assembly = assembly;
