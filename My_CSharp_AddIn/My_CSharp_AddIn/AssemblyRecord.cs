@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using My_CSharp_AddIn.Models;
 using Newtonsoft.Json;
 using System.IO;
+using System.Windows.Forms;
 
 namespace My_CSharp_AddIn
 {
@@ -14,9 +15,11 @@ namespace My_CSharp_AddIn
     {
         public Assembly CurrentAssembly;
         public List<Component> components = new List<Component>();
-
-        public void GetAssemble()
+        string JsonPath;
+        public void GetAssemble(string path)
         {
+            JsonPath = path;
+
             Inventor.Application m_inventorAplication = Globals.invApp;
 
             string CurrentAssembleName = m_inventorAplication.ActiveDocument.DisplayName;
@@ -39,11 +42,15 @@ namespace My_CSharp_AddIn
 
         public void doJson()
         {
-            string filePath = "C://Users//SeaRook//Desktop//gog";
+            //string JsonPath = "C://Users//SeaRook//Desktop//gog";
 
             var assembleJson = JsonConvert.SerializeObject(CurrentAssembly);
-            var pathOut = Path.Combine(filePath, CurrentAssembly.Name + ".json");    
+            var pathOut = Path.Combine(JsonPath, CurrentAssembly.Name.Substring(0, CurrentAssembly.Name.Length - 4) + ".json");
 
+            if (!Directory.Exists(JsonPath))
+            {
+                Directory.CreateDirectory(JsonPath);
+            }
             File.WriteAllText(pathOut, assembleJson);
         }
 
@@ -57,7 +64,13 @@ namespace My_CSharp_AddIn
             Assembly SubAssembly = null;
             Assembly TempSubAssembly = null;
             List<Component> SubComponents = new List<Component>();
-            bool isAssemble = false; 
+            bool isAssemble = false;
+
+            double x1, x2, x3, y1, y2, y3, z1, z2, z3;
+            double xRotationRadians, yRotationRadians, zRotationRadians;
+            double xRotation, yRotation, zRotation;
+
+            Inventor.Matrix matrix;
 
             while (Em.MoveNext() == true)
             {
@@ -70,37 +83,81 @@ namespace My_CSharp_AddIn
 
                 Inventor.MassProperties mass = objOc.MassProperties;
 
-                double centerX = mass.CenterOfMass.X * 10.0;
+                /*double centerX = mass.CenterOfMass.X * 10.0;
                 double centerY = mass.CenterOfMass.Y * 10.0;
-                double centerZ = mass.CenterOfMass.Z * 10.0;
+                double centerZ = mass.CenterOfMass.Z * 10.0;*/
+                
 
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
                 var ptZ = objOc.Transformation.Translation.Z * 10.0;
 
-                Inventor.Matrix matrix = objOc.Transformation;
+                matrix = objOc.Transformation;
 
-                double rotationAngle = Math.Acos(matrix.Cell[1, 1]) * 180 / Math.PI;
+                /*x1 = matrix.Cell[1, 1];
+                x2 = matrix.Cell[1, 2];
+                x3 = matrix.Cell[1, 3];
 
-                double xRotation, yRotation, zRotation;
+                y1 = matrix.Cell[2, 1];
+                y2 = matrix.Cell[2, 2];
+                y3 = matrix.Cell[2, 3];
 
-                double x1 = matrix.Cell[1, 1];
-                double x2 = matrix.Cell[1, 2];
-                double x3 = matrix.Cell[1, 3];
-                double y1 = matrix.Cell[2, 1];
-                double y2 = matrix.Cell[2, 2];
-                double y3 = matrix.Cell[2, 3];
-                double z1 = matrix.Cell[3, 1];
-                double z2 = matrix.Cell[3, 2];
-                double z3 = matrix.Cell[3, 3];
+                z1 = matrix.Cell[3, 1];
+                z2 = matrix.Cell[3, 2];
+                z3 = matrix.Cell[3, 3];*/
 
-                double xRotationRadians = Math.Atan2(y3, z3);
-                double yRotationRadians = Math.Atan2(-x3, Math.Sqrt(x1 * x1 + x2 * x2));
-                double zRotationRadians = Math.Atan2(x2, x1); // НЕверно
+                x1 = matrix.Cell[1, 1];
+                x2 = matrix.Cell[2, 1];
+                x3 = matrix.Cell[3, 1];
+
+                y1 = matrix.Cell[1, 2];
+                y2 = matrix.Cell[2, 2];
+                y3 = matrix.Cell[3, 2];
+
+                z1 = matrix.Cell[1, 3];
+                z2 = matrix.Cell[2, 3];
+                z3 = matrix.Cell[3, 3];
+
+                xRotationRadians = Math.Atan2(y3, z3);
+                yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
+
+
+                int signx1 = Math.Sign(x1);
+                int signx2 = Math.Sign(x2);
+                int signx3 = Math.Sign(x3);
+                int signy1 = Math.Sign(y1);
+                int signy2 = Math.Sign(y2);
+                int signy3 = Math.Sign(y3);
+                int signz1 = Math.Sign(z1);
+                int signz2 = Math.Sign(z2);
+                int signz3 = Math.Sign(z3);
+
+
+                if (signx3 >= 1)
+                { 
+                    zRotationRadians = Math.Atan2(x2, x1);
+                }
+                else 
+                {
+                    zRotationRadians = Math.Atan2(y1, -y2);
+                }
 
                 xRotation = -xRotationRadians * (180 / Math.PI);
                 yRotation = yRotationRadians * (180 / Math.PI);
-                zRotation = zRotationRadians * (180 / Math.PI);
+                zRotation = -zRotationRadians * (180 / Math.PI);
+
+                var XRotationRadians1 = Math.Atan2(y3, z3);
+                var YRotationRadians1 = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
+                var ZRotationRadians1 = Math.Atan2(x2, x1);
+                var ZRotationRadians2 = Math.Atan2(y1, -y2);
+
+                var Test1 = -XRotationRadians1 * (180 / Math.PI);
+                var Test2 = -YRotationRadians1 * (180 / Math.PI);
+                var Test3 = -ZRotationRadians1 * (180 / Math.PI);
+                var Test4 = -ZRotationRadians2 * (180 / Math.PI);
+
+               /* string s = objOc.Name + "\n" + signx1 + " " + signy1 + " " + signz1 + "\n" + signx2 + " " + signy2 + " " + signz2 + "\n" + signx3 + " " + signy3 + " " + signz3 ;
+                MessageBox.Show(s + " \n" + Test1 + " \n" + Test2 + "\n " + Test3 + "\n" + Test4);*/
 
                 ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
                 Rotations = new Coordinates(xRotation, yRotation, zRotation);
@@ -121,7 +178,7 @@ namespace My_CSharp_AddIn
                 if (SUB != "Sub")
                 {
 
-                    Component currentComponent = new Component(objOc._DisplayName.Replace(":", "_"), ComponentCoordinates,Rotations, connections, isAssemble, TempSubAssembly);
+                     Component currentComponent = new Component(objOc._DisplayName.Replace(":", "_"), ComponentCoordinates,Rotations, connections, isAssemble, TempSubAssembly);
                     components.Add(currentComponent);
                 }
                 else 

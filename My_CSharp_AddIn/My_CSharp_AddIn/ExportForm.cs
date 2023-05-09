@@ -12,22 +12,28 @@ using Microsoft.VisualBasic.Compatibility.VB6;
 
 namespace My_CSharp_AddIn
 {
-    public partial class TestForm : Form
+    public partial class ExportForm : Form
     {
         private Inventor.Application m_inventorAplication;
-        List<String> tree = new List<string>();
-        public TestForm(Inventor.Application application)
+
+        public string path;
+        public ExportForm(Inventor.Application application)
         {
             
             TopMost = true;
+
             InitializeComponent();
 
             m_inventorAplication = application;
-        }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
+            PathTextBox.Text = m_inventorAplication.ActiveDocument.FullFileName.Replace(m_inventorAplication.ActiveDocument.DisplayName , "");
+            path = PathTextBox.Text;
 
+            ResolutionComBox.SelectedIndex = 2;
+            ResolutionComBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            DoSubAssembleComBox.SelectedIndex = 0;
+            DoSubAssembleComBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void TestForm_Load(object sender, EventArgs e)
@@ -35,53 +41,37 @@ namespace My_CSharp_AddIn
 
         }
 
-        void display()
-        {
-            String text = "";
-            for (int i = 0; i < tree.Count(); i++)
-            {
-                text += " " + tree[i] + "\n";
-            }
-
-            richTextBox1.Text = text;
-        }
+     
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string Name = m_inventorAplication.ActiveDocument.DisplayName;
-
-           
-
             try
             {
+                string Name = m_inventorAplication.ActiveDocument.DisplayName;
 
-                Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+                try
+                {
 
-             
+                    //Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+                    //getComponent(ASs.ComponentDefinition.Occurrences, "no");
 
+                    path = PathTextBox.Text + "\\" + m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult";
 
-                //getComponent(ASs.ComponentDefinition.Occurrences, "no");
+                    AssemblyRecord assemblyRecord = new AssemblyRecord();
 
-                display();
+                    assemblyRecord.GetAssemble(path);
 
-                //MessageBox.Show(text);
-
-                tree.Clear();
-
-                AssemblyRecord assemblyRecord = new AssemblyRecord();
-                assemblyRecord.GetAssemble();
-
-                
-
-                //Simple(ASs.ComponentDefinition.Occurrences);
-
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
-            catch(Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+
+                MessageBox.Show("The assembly is not open");
             }
-
-
 
         }
 
@@ -151,14 +141,14 @@ namespace My_CSharp_AddIn
 
                 
 
-                if (SUB != "Sub")  tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z);
-                else tree.Add("        "+objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " + x + " |y= " + y + " |z= " + z);
+                /*if (SUB != "Sub")  tree.Add(objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " +x +" |y= " + y + " |z= " +z);
+                else tree.Add("        "+objOc._DisplayName + "(" + objOc.Constraints.Count + ")" + "| x= " + x + " |y= " + y + " |z= " + z);*/
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
 
                 getComponent((Inventor.ComponentOccurrences)objOc.SubOccurrences , "Sub");
 
-                display();
+                //display();
 
                 getConstrains(objconEnum);
             }
@@ -171,9 +161,7 @@ namespace My_CSharp_AddIn
             while (objconEnum.MoveNext() == true)
             {
                 oAsscon = (Inventor.AssemblyConstraint)objconEnum.Current;
-                tree.Add("   "+oAsscon.Name);
-
-                display();
+              
 
                 Inventor.ComponentOccurrence One = (Inventor.ComponentOccurrence)oAsscon.OccurrenceOne;
                 Inventor.ComponentOccurrence Two = (Inventor.ComponentOccurrence)oAsscon.OccurrenceTwo;
@@ -216,8 +204,8 @@ namespace My_CSharp_AddIn
 
                    
 
-                    tree.Add("        {" + One._DisplayName);
-                    tree.Add("        " + Two._DisplayName + "}"+"\n");
+                   // tree.Add("        {" + One._DisplayName);
+                    //tree.Add("        " + Two._DisplayName + "}"+"\n");
                 }
 
                 
@@ -226,30 +214,43 @@ namespace My_CSharp_AddIn
 
         }
 
-
-
-       
-
         private void button2_Click(object sender, EventArgs e)
         {
-            Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+            //Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
 
-            string PATH;
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Select Folder";
-            if (fbd.ShowDialog() == DialogResult.OK)
+            if(m_inventorAplication.ActiveDocument == null)
             {
-                PATH = fbd.SelectedPath;
-            }
-            else
-            {
-                MessageBox.Show("Must specify DXF path");
+            
+                MessageBox.Show("The assembly is not open");
                 return;
             }
 
-            ExportAlgoritm export = new ExportAlgoritm();
+            if (m_inventorAplication.ActiveDocument.DocumentType != Inventor.DocumentTypeEnum.kAssemblyDocumentObject)
+            {
+                MessageBox.Show("The assembly is not open");
+                return;
+            }
 
-            export.DoExport(PATH);
+            if (!(string.IsNullOrEmpty(PathTextBox.Text) || string.IsNullOrWhiteSpace(PathTextBox.Text)))
+            { 
+               path = PathTextBox.Text + "\\"+ m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult\\";
+
+                try
+                {
+                    ExportAlgoritm export = new ExportAlgoritm();
+                    export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
+                    MessageBox.Show("Successfully");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error "+ ex.Message);
+                }               
+            }
+            else
+            {
+                MessageBox.Show("The path is not chosen");
+            }
+            
 
            /* Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
             Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
@@ -290,6 +291,39 @@ namespace My_CSharp_AddIn
 
                 MessageBox.Show(ex.Message);
             }*/
+        }
+
+        private void PathBut_Click(object sender, EventArgs e)
+        {
+            Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+
+            string PATH;
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "Select Folder";
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                PATH = fbd.SelectedPath;
+                PathTextBox.Text = PATH;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void SimpleBut_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+                Simple(ASs.ComponentDefinition.Occurrences);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            
         }
     }
 

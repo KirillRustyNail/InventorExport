@@ -14,13 +14,14 @@ namespace My_CSharp_AddIn
 {
     public static class CommandFunctions
     {
+
         public static void RunAnExe()
         {
-            TestForm frm;
+            ExportForm frm;
 
             try
             {
-                frm = new TestForm(Globals.invApp);
+                frm = new ExportForm(Globals.invApp);
                 
                 frm.Show();
             }
@@ -31,7 +32,7 @@ namespace My_CSharp_AddIn
             
         }
 
-        public static void PopupMessage()
+        /*public static void PopupMessage()
         {
             MessageBox.Show("This is a message box!");
         }
@@ -40,8 +41,8 @@ namespace My_CSharp_AddIn
         {
             Globals.invApp.ActiveDocument.Close(true);
         }
-
-        public static void ExportDxf()
+*/
+       /* public static void ExportDxf()
         {
             PartDocument doc = (PartDocument)Globals.invApp.ActiveDocument;
 
@@ -112,6 +113,6 @@ namespace My_CSharp_AddIn
             }
 
             MessageBox.Show("DXF saved to path:\n\n" + DXF_PATH);
-        }
+        }*/
     }
 }

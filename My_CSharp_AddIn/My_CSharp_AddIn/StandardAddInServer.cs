@@ -87,7 +87,7 @@ namespace My_CSharp_AddIn
                         case "my_first_button":
                             CommandFunctions.RunAnExe();
                             return;
-                        case "my_second_button":
+                        /*case "my_second_button":
                             CommandFunctions.PopupMessage();
                             return;
                         case "close_doc_button":
@@ -95,7 +95,7 @@ namespace My_CSharp_AddIn
                             return;
                         case "export_dxf_button":
                             CommandFunctions.ExportDxf();
-                            return;
+                            return;*/
                         default:
                             return;
                     }
@@ -137,10 +137,10 @@ namespace My_CSharp_AddIn
 
                     // ButtonName = create_button(display_text, internal_name, icon_path)
                     CreateButton create_button = new CreateButton (button_template);
-                    MyFirstButton = create_button("    My First    \n    Command    ", "my_first_button", @"ButtonResources\MyIcon1");
-                    MySecondButton = create_button("    My Second    \n    Command    ", "my_second_button", @"ButtonResources\MyIcon2");
+                    MyFirstButton = create_button("    Do Export    ", "my_first_button", @"ButtonResources\MyIcon1");
+                    /*MySecondButton = create_button("    My Second    \n    Command    ", "my_second_button", @"ButtonResources\MyIcon2");
                     CloseDocButton = create_button("    Close    \n    Document    ", "close_doc_button", @"ButtonResources\MyIcon3");
-                    ExportDxfButton = create_button("    Export    \n    DXF    ", "export_dxf_button", @"ButtonResources\MyIcon4");
+                    ExportDxfButton = create_button("    Export    \n    DXF    ", "export_dxf_button", @"ButtonResources\MyIcon4");*/
 
                     // Add to the user interface, if it's the first time.
                     // If this add-in doesn't have a UI but runs in the background listening
@@ -206,45 +206,45 @@ namespace My_CSharp_AddIn
                 // iFeatures
                 // UnknownDocument
                 Ribbon asmRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Assembly"];
-                Ribbon prtRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Part"];
-                Ribbon dwgRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Drawing"];
+                /*Ribbon prtRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Part"];
+                Ribbon dwgRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Drawing"];*/
 
 
                 // Set up Tabs.
                 // tab = setup_panel(display_name, internal_name, inv_ribbon)
                 RibbonTab MyTab_asm;
-                MyTab_asm = setup_tab("My Tab", "my_tab_asm", asmRibbon);
+                MyTab_asm = setup_tab("ExportForVr", "my_tab_asm", asmRibbon);
 
-                RibbonTab MyTab_prt;
+               /* RibbonTab MyTab_prt;
                 MyTab_prt = setup_tab("My Tab", "my_tab_prt", prtRibbon);
 
                 RibbonTab MyTab_dwg;
-                MyTab_dwg = setup_tab("My Tab", "my_tab_dwg", dwgRibbon);
+                MyTab_dwg = setup_tab("My Tab", "my_tab_dwg", dwgRibbon);*/
 
 
                 // Set up Panels.
                 // panel = setup_panel(display_name, internal_name, ribbon_tab)
-                RibbonPanel MyPanel_prt;
+               /* RibbonPanel MyPanel_prt;
                 MyPanel_prt = setup_panel("My Panel", "my_panel_prt", MyTab_prt);
 
                 RibbonPanel ExportPanel_prt;
                 ExportPanel_prt = setup_panel("Export", "export_panel_prt", MyTab_prt);
 
                 RibbonPanel MyPanel_dwg;
-                MyPanel_dwg = setup_panel("My Panel", "my_panel_dwg", MyTab_dwg);
+                MyPanel_dwg = setup_panel("My Panel", "my_panel_dwg", MyTab_dwg);*/
 
                 RibbonPanel MyPanel_asm;
-                MyPanel_asm = setup_panel("My Panel", "my_panel_asm", MyTab_asm);
+                MyPanel_asm = setup_panel("ExportForVR", "my_panel_asm", MyTab_asm);
 
 
                 // Set up Buttons.
                 if (!(MyFirstButton == null))
                 {
                     MyPanel_asm.CommandControls.AddButton(MyFirstButton, true);
-                    MyPanel_dwg.CommandControls.AddButton(MyFirstButton, true);
+                   /* MyPanel_dwg.CommandControls.AddButton(MyFirstButton, true);*/
                 }
 
-                if (!(MySecondButton == null))
+                /*if (!(MySecondButton == null))
                 {
                     MyPanel_prt.CommandControls.AddButton(MySecondButton, true);
                     MyPanel_dwg.CommandControls.AddButton(MySecondButton, true);
@@ -259,7 +259,7 @@ namespace My_CSharp_AddIn
                 if (!(ExportDxfButton == null))
                 {
                     ExportPanel_prt.CommandControls.AddButton(ExportDxfButton, true);
-                }
+                }*/
             }
 
 

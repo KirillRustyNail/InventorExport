@@ -111,11 +111,11 @@
     <Compile Include="Models\Component.cs" />
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Coordinates.cs" />
-    <Compile Include="TestForm.cs">
+    <Compile Include="ExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestForm.Designer.cs">
-      <DependentUpon>TestForm.cs</DependentUpon>
+    <Compile Include="ExportForm.Designer.cs">
+      <DependentUpon>ExportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="StandardAddInServer.cs" />
@@ -189,8 +189,8 @@
     <None Include="ButtonResources\MyIcon4\32x32.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestForm.resx">
-      <DependentUpon>TestForm.cs</DependentUpon>
+    <EmbeddedResource Include="ExportForm.resx">
+      <DependentUpon>ExportForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
