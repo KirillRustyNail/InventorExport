@@ -104,13 +104,12 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="AssemblyRecord.cs" />
-    <Compile Include="Button.cs" />
     <Compile Include="CommandFunctions.cs" />
     <Compile Include="ExportAlgoritm.cs" />
-    <Compile Include="Models\Assembly.cs" />
-    <Compile Include="Models\Component.cs" />
-    <Compile Include="Models\Connection.cs" />
-    <Compile Include="Models\Coordinates.cs" />
+    <Compile Include="Classes\Assembly.cs" />
+    <Compile Include="Classes\Component.cs" />
+    <Compile Include="Classes\Connection.cs" />
+    <Compile Include="Classes\Coordinates.cs" />
     <Compile Include="ExportForm.cs">
       <SubType>Form</SubType>
     </Compile>

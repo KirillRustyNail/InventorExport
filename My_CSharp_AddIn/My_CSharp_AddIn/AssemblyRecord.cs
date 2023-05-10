@@ -15,7 +15,7 @@ namespace My_CSharp_AddIn
     {
         public Assembly CurrentAssembly;
         public List<Component> components = new List<Component>();
-        string JsonPath;
+        public string JsonPath;
         public void GetAssemble(string path)
         {
             JsonPath = path;
@@ -40,7 +40,7 @@ namespace My_CSharp_AddIn
             doJson();
         }
 
-        public void doJson()
+        private void doJson()
         {
             //string JsonPath = "C://Users//SeaRook//Desktop//gog";
 

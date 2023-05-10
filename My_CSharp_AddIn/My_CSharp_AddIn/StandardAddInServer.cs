@@ -112,9 +112,9 @@ namespace My_CSharp_AddIn
 
             // Declare all buttons here
             ButtonDefinition MyFirstButton;
-            ButtonDefinition MySecondButton;
+            /*ButtonDefinition MySecondButton;
             ButtonDefinition CloseDocButton;
-            ButtonDefinition ExportDxfButton;
+            ButtonDefinition ExportDxfButton;*/
 
             // This method is called by Inventor when it loads the AddIn. The AddInSiteObject provides access  
             // to the Inventor Application object. The FirstTime flag indicates if the AddIn is loaded for
@@ -162,9 +162,9 @@ namespace My_CSharp_AddIn
             {
                 // Release objects.
                 MyFirstButton = null;
-                MySecondButton = null;
+                /*MySecondButton = null;
                 CloseDocButton = null;
-                ExportDxfButton = null;
+                ExportDxfButton = null;*/
                 m_uiEvents = null;
                 Globals.invApp = null;
 

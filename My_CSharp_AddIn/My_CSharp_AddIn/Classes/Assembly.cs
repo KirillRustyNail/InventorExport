@@ -8,7 +8,7 @@ namespace My_CSharp_AddIn.Models
 {
     class Assembly
     {
-        //public string Id { get; set; }
+        //public string Id { get; set; }-vp 
         public string Name { get; set; }
         public List<Component> Components { get; set; }
 

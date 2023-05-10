@@ -36,7 +36,7 @@ namespace My_CSharp_AddIn
             }
         }
 
-        void ExportLow(string path)
+        public void ExportLow(string path)
         {
             Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
 
@@ -82,7 +82,7 @@ namespace My_CSharp_AddIn
                 MessageBox.Show(ex.Message);
             }
         }
-        void ExportTogether(Inventor.ComponentOccurrences incollect , string path , int Resolution)
+        public void ExportTogether(Inventor.ComponentOccurrences incollect , string path , int Resolution)
         {
             IEnumerator Em = incollect.GetEnumerator();
             Inventor.ComponentOccurrence objOc;
@@ -195,7 +195,7 @@ namespace My_CSharp_AddIn
             }
         }
 
-        void ExportIndividually(Inventor.ComponentOccurrences incollect, string path, int Resolution)
+        public void ExportIndividually(Inventor.ComponentOccurrences incollect, string path, int Resolution)
         {
             IEnumerator Em = incollect.GetEnumerator();
             Inventor.ComponentOccurrence objOc;
