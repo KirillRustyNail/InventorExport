@@ -8,26 +8,29 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections;
 using Inventor;
-
+using Application = System.Windows.Forms.Application;
 
 namespace My_CSharp_AddIn
 {
     public static class CommandFunctions
     {
-
+       
         public static void RunAnExe()
         {
             ExportForm frm;
 
             try
             {
-                frm = new ExportForm(Globals.invApp);
+                if (!FormManager.IsFormOpen<ExportForm>())
+                { 
+                    frm = new ExportForm(Globals.invApp);
+                    frm.Show();
+                }
                 
-                frm.Show();
             }
             catch (Exception e)
-            { 
-                
+            {
+                MessageBox.Show(e.Message);
             }
             
         }
@@ -114,5 +117,18 @@ namespace My_CSharp_AddIn
 
             MessageBox.Show("DXF saved to path:\n\n" + DXF_PATH);
         }*/
+    }
+
+    public static class FormManager
+    {
+        public static bool IsFormOpen<T>() where T : Form
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form.GetType() == typeof(T))
+                    return true;
+            }
+            return false;
+        }
     }
 }

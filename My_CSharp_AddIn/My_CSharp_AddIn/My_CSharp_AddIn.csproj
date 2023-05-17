@@ -116,6 +116,7 @@
     <Compile Include="ExportForm.Designer.cs">
       <DependentUpon>ExportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilletRemover.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="StandardAddInServer.cs" />
   </ItemGroup>

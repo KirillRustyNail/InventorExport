@@ -29,7 +29,6 @@ namespace My_CSharp_AddIn
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
             this.ExportBut = new System.Windows.Forms.Button();
             this.PathBut = new System.Windows.Forms.Button();
             this.PathTextBox = new System.Windows.Forms.TextBox();
@@ -38,24 +37,17 @@ namespace My_CSharp_AddIn
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.DoSubAssembleComBox = new System.Windows.Forms.ComboBox();
-            this.SimpleBut = new System.Windows.Forms.Button();
+            this.FilletRemoveBox = new System.Windows.Forms.CheckBox();
+            this.FilletRadiusCount = new System.Windows.Forms.NumericUpDown();
+            this.FilletRadiusLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.FilletRadiusCount)).BeginInit();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(136, 235);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(99, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Show";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ExportBut
             // 
-            this.ExportBut.Location = new System.Drawing.Point(31, 235);
+            this.ExportBut.Location = new System.Drawing.Point(31, 189);
             this.ExportBut.Name = "ExportBut";
-            this.ExportBut.Size = new System.Drawing.Size(99, 23);
+            this.ExportBut.Size = new System.Drawing.Size(275, 23);
             this.ExportBut.TabIndex = 3;
             this.ExportBut.Text = "Export";
             this.ExportBut.UseVisualStyleBackColor = true;
@@ -127,21 +119,41 @@ namespace My_CSharp_AddIn
             this.DoSubAssembleComBox.Size = new System.Drawing.Size(121, 21);
             this.DoSubAssembleComBox.TabIndex = 7;
             // 
-            // SimpleBut
+            // FilletRemoveBox
             // 
-            this.SimpleBut.Location = new System.Drawing.Point(241, 235);
-            this.SimpleBut.Name = "SimpleBut";
-            this.SimpleBut.Size = new System.Drawing.Size(99, 23);
-            this.SimpleBut.TabIndex = 2;
-            this.SimpleBut.Text = "Simplefy(Test)";
-            this.SimpleBut.UseVisualStyleBackColor = true;
-            this.SimpleBut.Click += new System.EventHandler(this.SimpleBut_Click);
+            this.FilletRemoveBox.AutoSize = true;
+            this.FilletRemoveBox.Location = new System.Drawing.Point(31, 150);
+            this.FilletRemoveBox.Name = "FilletRemoveBox";
+            this.FilletRemoveBox.Size = new System.Drawing.Size(105, 17);
+            this.FilletRemoveBox.TabIndex = 9;
+            this.FilletRemoveBox.Text = "Do remove Fillet ";
+            this.FilletRemoveBox.UseVisualStyleBackColor = true;
+            this.FilletRemoveBox.CheckedChanged += new System.EventHandler(this.FilletRemoveBox_CheckedChanged);
+            // 
+            // FilletRadiusCount
+            // 
+            this.FilletRadiusCount.Location = new System.Drawing.Point(250, 149);
+            this.FilletRadiusCount.Name = "FilletRadiusCount";
+            this.FilletRadiusCount.Size = new System.Drawing.Size(56, 20);
+            this.FilletRadiusCount.TabIndex = 10;
+            // 
+            // FilletRadiusLabel
+            // 
+            this.FilletRadiusLabel.AutoSize = true;
+            this.FilletRadiusLabel.Location = new System.Drawing.Point(155, 151);
+            this.FilletRadiusLabel.Name = "FilletRadiusLabel";
+            this.FilletRadiusLabel.Size = new System.Drawing.Size(89, 13);
+            this.FilletRadiusLabel.TabIndex = 11;
+            this.FilletRadiusLabel.Text = "Fillet Radius (mm)";
             // 
             // ExportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(435, 270);
+            this.ClientSize = new System.Drawing.Size(420, 237);
+            this.Controls.Add(this.FilletRadiusLabel);
+            this.Controls.Add(this.FilletRadiusCount);
+            this.Controls.Add(this.FilletRemoveBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.DoSubAssembleComBox);
@@ -150,18 +162,16 @@ namespace My_CSharp_AddIn
             this.Controls.Add(this.PathTextBox);
             this.Controls.Add(this.PathBut);
             this.Controls.Add(this.ExportBut);
-            this.Controls.Add(this.SimpleBut);
-            this.Controls.Add(this.button1);
             this.Name = "ExportForm";
             this.Text = "Export";
             this.Load += new System.EventHandler(this.TestForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.FilletRadiusCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button ExportBut;
         private System.Windows.Forms.Button PathBut;
         private System.Windows.Forms.TextBox PathTextBox;
@@ -170,6 +180,8 @@ namespace My_CSharp_AddIn
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox DoSubAssembleComBox;
-        private System.Windows.Forms.Button SimpleBut;
+        private System.Windows.Forms.CheckBox FilletRemoveBox;
+        private System.Windows.Forms.NumericUpDown FilletRadiusCount;
+        private System.Windows.Forms.Label FilletRadiusLabel;
     }
 }

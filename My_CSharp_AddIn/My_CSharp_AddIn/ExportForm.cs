@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
 using Microsoft.VisualBasic.Compatibility.VB6;
+using System.IO;
 
 namespace My_CSharp_AddIn
 {
@@ -34,6 +35,9 @@ namespace My_CSharp_AddIn
 
             DoSubAssembleComBox.SelectedIndex = 0;
             DoSubAssembleComBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            FilletRadiusLabel.Enabled = false;
+            FilletRadiusCount.Enabled = false;
         }
 
         private void TestForm_Load(object sender, EventArgs e)
@@ -43,7 +47,7 @@ namespace My_CSharp_AddIn
 
      
 
-        private void button1_Click(object sender, EventArgs e)
+        /*private void button1_Click(object sender, EventArgs e)
         {
             try
             {
@@ -73,56 +77,7 @@ namespace My_CSharp_AddIn
                 MessageBox.Show("The assembly is not open");
             }
 
-        }
-
-        void Simple(Inventor.ComponentOccurrences incollect)
-        {
-            IEnumerator Em = incollect.GetEnumerator();
-            Inventor.ComponentOccurrence objOc;
-            Inventor.PartDocument desiredPart = null;
-            Inventor.FilletFeature oFilletF = null;
-
-            while (Em.MoveNext() == true)
-            {
-                objOc = (Inventor.ComponentOccurrence)Em.Current;
-
-                if (objOc.DefinitionDocumentType == Inventor.DocumentTypeEnum.kPartDocumentObject)
-                {
-                    desiredPart = (Inventor.PartDocument)objOc.Definition.Document;
-
-                    foreach (Inventor.PartFeature feature in desiredPart.ComponentDefinition.Features)
-                    {
-                        if (feature is Inventor.FilletFeature)
-                        { 
-                            try
-                            {
-
-                                oFilletF = (Inventor.FilletFeature)feature;
-                                Inventor.ParametersEnumerator asds = oFilletF.Parameters;
-                                Inventor.Parameter One = asds[1];
-
-                                double val = Convert.ToDouble(One.Value);
-
-                                if (val < 0.8)
-                                {
-                                    oFilletF.Delete();
-                                }
-                            }
-                            catch (Exception)
-                            {
-
-                                MessageBox.Show("проблема с " + objOc._DisplayName + " В " + oFilletF.Name);
-                            }
-
-                        }
-                    }
-                }
-
-
-                Simple((Inventor.ComponentOccurrences)objOc.SubOccurrences);
-            }
-        }
-       
+        }*/
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -143,18 +98,62 @@ namespace My_CSharp_AddIn
 
             if (!(string.IsNullOrEmpty(PathTextBox.Text) || string.IsNullOrWhiteSpace(PathTextBox.Text)))
             { 
-               path = PathTextBox.Text + "\\"+ m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult\\";
+                int counter = 0;
+                string Filename = m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult";
+                string TempFileName = Filename;
 
-                try
+                while (Directory.Exists(Path.Combine(PathTextBox.Text, TempFileName)))
                 {
-                    ExportAlgoritm export = new ExportAlgoritm();
-                    export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
-                    MessageBox.Show("Successfully");
+                    TempFileName = Filename + "(" + counter + ")";
+                    counter++;
                 }
-                catch (Exception ex)
+
+                if (counter != 0)
                 {
-                    MessageBox.Show("Error "+ ex.Message);
-                }               
+                    path = PathTextBox.Text + "\\" + TempFileName + "\\";
+                }
+                else
+                {
+                    path = PathTextBox.Text + "\\" + m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult\\";
+                }
+
+               try
+               {
+
+                   AssemblyRecord assemblyRecord = new AssemblyRecord();
+
+                   assemblyRecord.GetAssemble(path);
+
+               }
+               catch (Exception ex)
+               {
+                   MessageBox.Show(ex.Message);
+               }
+
+               try
+               {
+                   FilletRemover rem = new FilletRemover();
+
+                   if (FilletRemoveBox.Checked == true)
+                   {
+                       rem.RemoveFiller(((double)FilletRadiusCount.Value));
+                   }
+               }
+               catch (Exception ex)
+               { 
+                   MessageBox.Show("Error " + ex.Message);
+               }
+
+               try
+               {
+                   ExportAlgoritm export = new ExportAlgoritm();
+                   export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
+                   MessageBox.Show("Successfully");
+               }
+               catch (Exception ex)
+               {
+                   MessageBox.Show("Error "+ ex.Message);
+               }               
             }
             else
             {
@@ -221,19 +220,18 @@ namespace My_CSharp_AddIn
             }
         }
 
-        private void SimpleBut_Click(object sender, EventArgs e)
+        private void FilletRemoveBox_CheckedChanged(object sender, EventArgs e)
         {
-            try
+            if (FilletRemoveBox.Checked == true)
             {
-                Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-                Simple(ASs.ComponentDefinition.Occurrences);
+                FilletRadiusLabel.Enabled = true;
+                FilletRadiusCount.Enabled = true;
             }
-            catch (Exception ex)
+            else
             {
-
-                MessageBox.Show(ex.Message);
+                FilletRadiusLabel.Enabled = false;
+                FilletRadiusCount.Enabled = false;
             }
-            
         }
     }
 
