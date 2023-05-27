@@ -12,33 +12,6 @@ namespace My_CSharp_AddIn
         /// Function to simplify the creation of a button definition.  The big advantage
         /// to using this function is that you don't have to deal with converting images
         /// but instead just reference a folder on disk where this routine reads the images.
-        /// </summary>
-        /// <param name="DisplayName">
-        /// The name of the command as it will be displayed on the button.
-        /// </param>
-        /// <param name="InternalName">
-        /// The internal name of the command. This needs to be unique with respect to ALL other
-        /// commands. It's best to incorporate a company name to help with uniqueness.
-        /// </param>
-        /// <param name="ToolTip">
-        /// The tooltip that will be used for the command.
-        /// 
-        /// This is optional and the display name will be used as the
-        /// tooltip if no tooltip is specified. Like in the DisplayName argument, you can use
-        /// returns to force line breaks.
-        /// </param>
-        /// <param name="IconFolder">
-        /// The folder that contains the icon files. This can be a full path or a path that is
-        /// relative to the location of the add-in dll. The folder should contain the files
-        /// 16x16.png and 32x32.png. Each command will have its own folder so they can have
-        /// their own icons.
-        /// 
-        /// This is optional and if no icon is specified then no icon will be displayed on the
-        /// button and it will be only text.
-        /// </param>
-        /// <returns>
-        /// Returns the newly created button definition or Nothing in case of failure.
-        /// </returns>
         public static Inventor.ButtonDefinition CreateButtonDefinition(string DisplayName,
                                                                        string InternalName,
                                                                        string ToolTip = "",
@@ -51,8 +24,9 @@ namespace My_CSharp_AddIn
             {
                 testDef = (Inventor.ButtonDefinition)Globals.invApp.CommandManager.ControlDefinitions[InternalName];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                throw;
             }
 
             if (!(testDef == null))
@@ -91,7 +65,7 @@ namespace My_CSharp_AddIn
                             System.Drawing.Bitmap image16x16 = new System.Drawing.Bitmap(filename16x16);
                             iPicDisp16x16 = ConvertImage.ConvertImageToIPictureDisp(image16x16);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             MessageBox.Show("Unable to load the 16x16.png image from \"" + IconFolder + "\"." + System.Environment.NewLine + "No small icon will be used.", "Error Loading Icon");
                         }
@@ -106,7 +80,7 @@ namespace My_CSharp_AddIn
                             System.Drawing.Bitmap image32x32 = new System.Drawing.Bitmap(filename32x32);
                             iPicDisp32x32 = ConvertImage.ConvertImageToIPictureDisp(image32x32);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             MessageBox.Show("Unable to load the 32x32.png image from \"" + IconFolder + "\"." + System.Environment.NewLine + "No large icon will be used.", "Error Loading Icon");
                         }
@@ -125,7 +99,7 @@ namespace My_CSharp_AddIn
                 ButtonDefinition btnDef = controlDefs.AddButtonDefinition(DisplayName, InternalName, Inventor.CommandTypesEnum.kShapeEditCmdType, Globals.g_addInClientID, "", ToolTip, iPicDisp16x16, iPicDisp32x32);
                 return btnDef;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -136,10 +110,6 @@ namespace My_CSharp_AddIn
         // This is primarily used for parenting a dialog to the Inventor window.
         // This provides the expected behavior when the Inventor window is collapsed
         // and activated.
-        // 
-        // For example:
-        // myForm.Show(New WindowWrapper(invApp.MainFrameHWND))
-        // 
         public class WindowWrapper : System.Windows.Forms.IWin32Window
         {
             public WindowWrapper(IntPtr handle)
@@ -177,7 +147,7 @@ namespace My_CSharp_AddIn
                 {
                     return (stdole.IPictureDisp)GetIPictureFromPicture(Image);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -189,7 +159,7 @@ namespace My_CSharp_AddIn
                 {
                     return GetPictureFromIPictureDisp(IPict);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }

@@ -16,8 +16,6 @@ namespace My_CSharp_AddIn
 
             // *********************************************************************************
             // * The two declarations below are related to adding buttons to Inventor's UI.
-            // * They can be deleted if this add-in doesn't have a UI and only runs in the 
-            // * background handling events.
             // *********************************************************************************
 
             // Declaration of the object for the UserInterfaceEvents to be able to handle
@@ -85,17 +83,8 @@ namespace My_CSharp_AddIn
                     switch (bd.InternalName)
                     {
                         case "my_first_button":
-                            CommandFunctions.RunAnExe();
+                            CommandFunctions.RunExportForm();
                             return;
-                        /*case "my_second_button":
-                            CommandFunctions.PopupMessage();
-                            return;
-                        case "close_doc_button":
-                            CommandFunctions.CloseDocument();
-                            return;
-                        case "export_dxf_button":
-                            CommandFunctions.ExportDxf();
-                            return;*/
                         default:
                             return;
                     }
@@ -112,9 +101,7 @@ namespace My_CSharp_AddIn
 
             // Declare all buttons here
             ButtonDefinition MyFirstButton;
-            /*ButtonDefinition MySecondButton;
-            ButtonDefinition CloseDocButton;
-            ButtonDefinition ExportDxfButton;*/
+            
 
             // This method is called by Inventor when it loads the AddIn. The AddInSiteObject provides access  
             // to the Inventor Application object. The FirstTime flag indicates if the AddIn is loaded for
@@ -130,21 +117,12 @@ namespace My_CSharp_AddIn
                     m_uiEvents = Globals.invApp.UserInterfaceManager.UserInterfaceEvents;
 
                     // *********************************************************************************
-                    // * The remaining code in this Sub is all for adding the add-in into Inventor's UI.
-                    // * It can be deleted if this add-in doesn't have a UI and only runs in the 
-                    // * background handling events.
+                    // * The remaining code in this Sub is all for adding the add-in into Inventor's UI
                     // *********************************************************************************
 
-                    // ButtonName = create_button(display_text, internal_name, icon_path)
                     CreateButton create_button = new CreateButton (button_template);
                     MyFirstButton = create_button("    Do Export    ", "my_first_button", @"ButtonResources\MyIcon1");
-                    /*MySecondButton = create_button("    My Second    \n    Command    ", "my_second_button", @"ButtonResources\MyIcon2");
-                    CloseDocButton = create_button("    Close    \n    Document    ", "close_doc_button", @"ButtonResources\MyIcon3");
-                    ExportDxfButton = create_button("    Export    \n    DXF    ", "export_dxf_button", @"ButtonResources\MyIcon4");*/
-
-                    // Add to the user interface, if it's the first time.
-                    // If this add-in doesn't have a UI but runs in the background listening
-                    // to events, you can delete this.
+                  
                     if (firstTime)
                     {
                         AddToUserInterface();
@@ -162,9 +140,6 @@ namespace My_CSharp_AddIn
             {
                 // Release objects.
                 MyFirstButton = null;
-                /*MySecondButton = null;
-                CloseDocButton = null;
-                ExportDxfButton = null;*/
                 m_uiEvents = null;
                 Globals.invApp = null;
 
@@ -191,48 +166,21 @@ namespace My_CSharp_AddIn
             }
 
 
-            // Adds whatever is needed by this add-in to the user-interface.  This is 
-            // called when the add-in loaded and also if the user interface is reset.
+            // Adds whatever is needed by this add-in to the user-interface.
+            // This is called when the add-in loaded and also if the user interface is reset.
             private void AddToUserInterface()
             {
 
-                // Get the ribbon. (more buttons can be added to various ribbons within this single addin)
-                // Ribbons:
-                // ZeroDoc
-                // Part
+                // Get the ribbon.
                 // Assembly
-                // Drawing
-                // Presentation
-                // iFeatures
-                // UnknownDocument
                 Ribbon asmRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Assembly"];
-                /*Ribbon prtRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Part"];
-                Ribbon dwgRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Drawing"];*/
-
-
+              
                 // Set up Tabs.
                 // tab = setup_panel(display_name, internal_name, inv_ribbon)
                 RibbonTab MyTab_asm;
                 MyTab_asm = setup_tab("ExportForVr", "my_tab_asm", asmRibbon);
 
-               /* RibbonTab MyTab_prt;
-                MyTab_prt = setup_tab("My Tab", "my_tab_prt", prtRibbon);
-
-                RibbonTab MyTab_dwg;
-                MyTab_dwg = setup_tab("My Tab", "my_tab_dwg", dwgRibbon);*/
-
-
-                // Set up Panels.
-                // panel = setup_panel(display_name, internal_name, ribbon_tab)
-               /* RibbonPanel MyPanel_prt;
-                MyPanel_prt = setup_panel("My Panel", "my_panel_prt", MyTab_prt);
-
-                RibbonPanel ExportPanel_prt;
-                ExportPanel_prt = setup_panel("Export", "export_panel_prt", MyTab_prt);
-
-                RibbonPanel MyPanel_dwg;
-                MyPanel_dwg = setup_panel("My Panel", "my_panel_dwg", MyTab_dwg);*/
-
+                // Set up panels
                 RibbonPanel MyPanel_asm;
                 MyPanel_asm = setup_panel("ExportForVR", "my_panel_asm", MyTab_asm);
 
@@ -241,28 +189,11 @@ namespace My_CSharp_AddIn
                 if (!(MyFirstButton == null))
                 {
                     MyPanel_asm.CommandControls.AddButton(MyFirstButton, true);
-                   /* MyPanel_dwg.CommandControls.AddButton(MyFirstButton, true);*/
+                   
                 }
-
-                /*if (!(MySecondButton == null))
-                {
-                    MyPanel_prt.CommandControls.AddButton(MySecondButton, true);
-                    MyPanel_dwg.CommandControls.AddButton(MySecondButton, true);
-                }
-
-                if (!(CloseDocButton == null))
-                {
-                    MyPanel_prt.CommandControls.AddButton(CloseDocButton, true);
-                    MyPanel_dwg.CommandControls.AddButton(CloseDocButton, true);
-                }
-
-                if (!(ExportDxfButton == null))
-                {
-                    ExportPanel_prt.CommandControls.AddButton(ExportDxfButton, true);
-                }*/
             }
 
-
+            // Set up Tabs.
             private RibbonTab setup_tab(string display_name, string internal_name, Ribbon inv_ribbon)
             {
                 RibbonTab setup_tabRet = default(RibbonTab);
@@ -271,7 +202,7 @@ namespace My_CSharp_AddIn
                 {
                     ribbon_tab = inv_ribbon.RibbonTabs[internal_name];
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
 
@@ -284,7 +215,7 @@ namespace My_CSharp_AddIn
                 return setup_tabRet;
             }
 
-
+            // Set up panels
             private RibbonPanel setup_panel(string display_name, string internal_name, RibbonTab ribbon_tab)
             {
                 RibbonPanel setup_panelRet = default(RibbonPanel);
@@ -293,8 +224,9 @@ namespace My_CSharp_AddIn
                 {
                     ribbon_panel = ribbon_tab.RibbonPanels[internal_name];
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
+                    throw;
                 }
 
                 if (ribbon_panel == null)
@@ -321,10 +253,8 @@ namespace My_CSharp_AddIn
         // Inventor application object.
         public static Inventor.Application invApp;
 
-        // The unique ID for this add-in.  If this add-in is copied to create a new add-in
-        // you need to update this ID along with the ID in the .manifest file, the .addin file
-        // and create a new ID for the typelib GUID in AssemblyInfo.vb
-        public const string g_simpleAddInClientID = "ff0f87f8-457b-449f-bede-49851b210743";
+        // The unique ID for this add-in
+        public const string g_simpleAddInClientID = "70dd2918-5bf3-4547-911b-4131750b2f67";
         public const string g_addInClientID = "{" + g_simpleAddInClientID + "}";
     }
 }

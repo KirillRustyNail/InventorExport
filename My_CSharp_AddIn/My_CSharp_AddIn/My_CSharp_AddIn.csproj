@@ -134,7 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ButtonResources\MyIcon1\16x16.png" />
@@ -169,24 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ButtonResources\MyIcon1\32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon2\16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon2\32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon3\16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon3\32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon4\16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ButtonResources\MyIcon4\32x32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExportForm.resx">

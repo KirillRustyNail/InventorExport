@@ -30,7 +30,7 @@ namespace My_CSharp_AddIn
                 }
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -140,9 +140,8 @@ namespace My_CSharp_AddIn
                     {
                         addIn.SaveCopyAs(desiredPart, oContext, oOptions, oDataMedium);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-
                         throw;
                     }
 

@@ -62,7 +62,6 @@ namespace My_CSharp_AddIn
                     }
                 }
 
-
                 Simple((Inventor.ComponentOccurrences)objOc.SubOccurrences);
             }
         }
