@@ -274,7 +274,7 @@ namespace My_CSharp_AddIn
         public static Inventor.Application invApp;
 
         // The unique ID for this add-in.  If this add-in is copied to create a new add-in
-        public const string g_simpleAddInClientID = "ff0f87f8-457b-449f-bede-49851b210743";
+        public const string g_simpleAddInClientID = "520b8e7c-88a0-42dd-a8c9-739783cd39fd";
         public const string g_addInClientID = "{" + g_simpleAddInClientID + "}";
     }
 }

@@ -162,6 +162,8 @@ namespace My_CSharp_AddIn
             this.Controls.Add(this.PathTextBox);
             this.Controls.Add(this.PathBut);
             this.Controls.Add(this.ExportBut);
+            this.MaximumSize = new System.Drawing.Size(436, 276);
+            this.MinimumSize = new System.Drawing.Size(436, 276);
             this.Name = "ExportForm";
             this.Text = "Export";
             this.Load += new System.EventHandler(this.TestForm_Load);

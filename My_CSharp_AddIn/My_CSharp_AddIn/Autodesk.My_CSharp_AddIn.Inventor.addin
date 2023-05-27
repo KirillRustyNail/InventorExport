@@ -1,7 +1,7 @@
 <Addin Type="Standard">
   <!--Created for Autodesk Inventor >= 2015 (Version 19.0)-->
-  <ClassId>{ff0f87f8-457b-449f-bede-49851b210743}</ClassId>
-  <ClientId>{ff0f87f8-457b-449f-bede-49851b210743}</ClientId>
+  <ClassId>{520b8e7c-88a0-42dd-a8c9-739783cd39fd}</ClassId>
+  <ClientId>{520b8e7c-88a0-42dd-a8c9-739783cd39fd}</ClientId>
   <DisplayName>CSharp_AddIn</DisplayName>
   <Description>CSharp_AddIn</Description>
   <Assembly>My_CSharp_AddIn.dll</Assembly>
