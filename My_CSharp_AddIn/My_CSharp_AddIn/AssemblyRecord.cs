@@ -42,7 +42,7 @@ namespace My_CSharp_AddIn
 
         private void doJson()
         {
-            //string JsonPath = "C://Users//SeaRook//Desktop//gog";
+           
 
             var assembleJson = JsonConvert.SerializeObject(CurrentAssembly);
             var pathOut = Path.Combine(JsonPath, CurrentAssembly.Name.Substring(0, CurrentAssembly.Name.Length - 4) + ".json");

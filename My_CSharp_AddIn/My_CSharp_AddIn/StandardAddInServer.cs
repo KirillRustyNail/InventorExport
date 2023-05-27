@@ -162,9 +162,6 @@ namespace My_CSharp_AddIn
             {
                 // Release objects.
                 MyFirstButton = null;
-                /*MySecondButton = null;
-                CloseDocButton = null;
-                ExportDxfButton = null;*/
                 m_uiEvents = null;
                 Globals.invApp = null;
 
@@ -196,42 +193,14 @@ namespace My_CSharp_AddIn
             private void AddToUserInterface()
             {
 
-                // Get the ribbon. (more buttons can be added to various ribbons within this single addin)
-                // Ribbons:
-                // ZeroDoc
-                // Part
+                // Get the ribbon.
                 // Assembly
-                // Drawing
-                // Presentation
-                // iFeatures
-                // UnknownDocument
+                
                 Ribbon asmRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Assembly"];
-                /*Ribbon prtRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Part"];
-                Ribbon dwgRibbon = Globals.invApp.UserInterfaceManager.Ribbons["Drawing"];*/
-
 
                 // Set up Tabs.
-                // tab = setup_panel(display_name, internal_name, inv_ribbon)
                 RibbonTab MyTab_asm;
                 MyTab_asm = setup_tab("ExportForVr", "my_tab_asm", asmRibbon);
-
-               /* RibbonTab MyTab_prt;
-                MyTab_prt = setup_tab("My Tab", "my_tab_prt", prtRibbon);
-
-                RibbonTab MyTab_dwg;
-                MyTab_dwg = setup_tab("My Tab", "my_tab_dwg", dwgRibbon);*/
-
-
-                // Set up Panels.
-                // panel = setup_panel(display_name, internal_name, ribbon_tab)
-               /* RibbonPanel MyPanel_prt;
-                MyPanel_prt = setup_panel("My Panel", "my_panel_prt", MyTab_prt);
-
-                RibbonPanel ExportPanel_prt;
-                ExportPanel_prt = setup_panel("Export", "export_panel_prt", MyTab_prt);
-
-                RibbonPanel MyPanel_dwg;
-                MyPanel_dwg = setup_panel("My Panel", "my_panel_dwg", MyTab_dwg);*/
 
                 RibbonPanel MyPanel_asm;
                 MyPanel_asm = setup_panel("ExportForVR", "my_panel_asm", MyTab_asm);
@@ -241,25 +210,8 @@ namespace My_CSharp_AddIn
                 if (!(MyFirstButton == null))
                 {
                     MyPanel_asm.CommandControls.AddButton(MyFirstButton, true);
-                   /* MyPanel_dwg.CommandControls.AddButton(MyFirstButton, true);*/
+                 
                 }
-
-                /*if (!(MySecondButton == null))
-                {
-                    MyPanel_prt.CommandControls.AddButton(MySecondButton, true);
-                    MyPanel_dwg.CommandControls.AddButton(MySecondButton, true);
-                }
-
-                if (!(CloseDocButton == null))
-                {
-                    MyPanel_prt.CommandControls.AddButton(CloseDocButton, true);
-                    MyPanel_dwg.CommandControls.AddButton(CloseDocButton, true);
-                }
-
-                if (!(ExportDxfButton == null))
-                {
-                    ExportPanel_prt.CommandControls.AddButton(ExportDxfButton, true);
-                }*/
             }
 
 
@@ -322,8 +274,6 @@ namespace My_CSharp_AddIn
         public static Inventor.Application invApp;
 
         // The unique ID for this add-in.  If this add-in is copied to create a new add-in
-        // you need to update this ID along with the ID in the .manifest file, the .addin file
-        // and create a new ID for the typelib GUID in AssemblyInfo.vb
         public const string g_simpleAddInClientID = "ff0f87f8-457b-449f-bede-49851b210743";
         public const string g_addInClientID = "{" + g_simpleAddInClientID + "}";
     }
