@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Product")]
 [assembly: AssemblyCopyright("Copyright")]
 [assembly: AssemblyTrademark("Trademark")]
-[assembly: Guid("70dd2918-5bf3-4547-911b-4131750b2f67")]
+[assembly: Guid("5f81e1a7-88bf-4a84-bd80-e639c0f356d3")]
 [assembly: AssemblyVersion("1.0.0")]
 
 

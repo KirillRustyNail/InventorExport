@@ -51,7 +51,7 @@ namespace My_CSharp_AddIn
             this.ExportBut.TabIndex = 3;
             this.ExportBut.Text = "Export";
             this.ExportBut.UseVisualStyleBackColor = true;
-            this.ExportBut.Click += new System.EventHandler(this.ExportButton_Click);
+            this.ExportBut.Click += new System.EventHandler(this.button2_Click);
             // 
             // PathBut
             // 
@@ -164,6 +164,7 @@ namespace My_CSharp_AddIn
             this.Controls.Add(this.ExportBut);
             this.Name = "ExportForm";
             this.Text = "Export";
+            this.Load += new System.EventHandler(this.TestForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FilletRadiusCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -29,18 +29,21 @@ namespace My_CSharp_AddIn
                 Inventor.AssemblyDocument assemblyDocument = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
                 GetComponent(assemblyDocument.ComponentDefinition.Occurrences, "no" , " ");
                 CurrentAssembly = new Assembly(CurrentAssembleName, components);
+
             }
             catch (Exception)
             {
+
                 throw;
             }
 
             doJson();
         }
 
-        //Serialize в Json
         private void doJson()
         {
+            //string JsonPath = "C://Users//SeaRook//Desktop//gog";
+
             var assembleJson = JsonConvert.SerializeObject(CurrentAssembly);
             var pathOut = Path.Combine(JsonPath, CurrentAssembly.Name.Substring(0, CurrentAssembly.Name.Length - 4) + ".json");
 
@@ -196,7 +199,6 @@ namespace My_CSharp_AddIn
 
         }
 
-        //Get Constrains
         private List<Connection> GetConstrains(IEnumerator objconEnum)
         {
             Inventor.AssemblyConstraint oAsscon;
