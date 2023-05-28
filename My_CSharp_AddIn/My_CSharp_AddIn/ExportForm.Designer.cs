@@ -51,7 +51,7 @@ namespace My_CSharp_AddIn
             this.ExportBut.TabIndex = 3;
             this.ExportBut.Text = "Export";
             this.ExportBut.UseVisualStyleBackColor = true;
-            this.ExportBut.Click += new System.EventHandler(this.button2_Click);
+            this.ExportBut.Click += new System.EventHandler(this.ExportButton_Click);
             // 
             // PathBut
             // 

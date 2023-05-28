@@ -12,6 +12,7 @@ namespace My_CSharp_AddIn
     {
         Inventor.Application m_inventorAplication = Globals.invApp;
         double FilletRadius =0 ;
+
         public void RemoveFiller(double filletRadius)
         {
             Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
@@ -19,6 +20,8 @@ namespace My_CSharp_AddIn
 
             Simple(ASs.ComponentDefinition.Occurrences);
         }
+
+        //Model improvement by removing fillet
         private void Simple(Inventor.ComponentOccurrences incollect)
         {
             IEnumerator Em = incollect.GetEnumerator();

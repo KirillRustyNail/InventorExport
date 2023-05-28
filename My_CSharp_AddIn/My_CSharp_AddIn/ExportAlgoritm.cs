@@ -12,6 +12,10 @@ namespace My_CSharp_AddIn
     class ExportAlgoritm
     {
         Inventor.Application m_inventorAplication = Globals.invApp;
+
+        //Selecting the export method. Where Do Export Assemble takes 0 or 1.
+        //0 - together
+        //1 - individually
         public void DoExport(string path , int Resolution , int DoExportAssemble)
         {
             try
@@ -36,52 +40,7 @@ namespace My_CSharp_AddIn
             }
         }
 
-        public void ExportLow(string path)
-        {
-            Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-
-            
-
-            Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
-            Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
-
-            Inventor.ApplicationAddIn oAppAddin = m_inventorAplication.ApplicationAddIns.ItemById["{F539FB09-FC01-4260-A429-1818B14D6BAC}"];
-
-
-            Inventor.TranslatorAddIn addIn = (Inventor.TranslatorAddIn)oAppAddin;
-
-            oContext.Type = Inventor.IOMechanismEnum.kFileBrowseIOMechanism;
-
-            Inventor.NameValueMap oOptions = oTO.CreateNameValueMap();
-
-            Inventor.DataMedium oDataMedium = oTO.CreateDataMedium();
-
-            oOptions.Value["ExportUnits"] = 0;
-
-            oOptions.Value["Resolution"] = 3;
-
-            oOptions.Value["SurfaceDeviation"] = 0.16;
-
-            oOptions.Value["NormalDeviation"] = 1500;
-
-            oOptions.Value["MaxEdgeLength"] = 100000;
-
-            oOptions.Value["AspectRatio"] = 2150;
-
-            oOptions.Value["ExportFileStructure"] = 1;
-
-            oDataMedium.FileName = System.IO.Path.ChangeExtension(path + "\\Parts\\" + oAssDoc.DisplayName, ".obj");
-
-            try
-            {
-                addIn.SaveCopyAs(oAssDoc, oContext, oOptions, oDataMedium);
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
-        }
+        // Export models with sub assemble Together
         public void ExportTogether(Inventor.ComponentOccurrences incollect , string path , int Resolution)
         {
             IEnumerator Em = incollect.GetEnumerator();
@@ -111,7 +70,7 @@ namespace My_CSharp_AddIn
 
                 oOptions.Value["ExportUnits"] = 0;
 
-                oOptions.Value["Resolution"] = Resolution;
+                oOptions.Value["Resolution"] = Resolution; // Resolution export models
 
                 oOptions.Value["SurfaceDeviation"] = 0.16;
 
@@ -195,6 +154,7 @@ namespace My_CSharp_AddIn
             }
         }
 
+        // Export models with sub assemble Individuall
         public void ExportIndividually(Inventor.ComponentOccurrences incollect, string path, int Resolution)
         {
             IEnumerator Em = incollect.GetEnumerator();
@@ -224,7 +184,7 @@ namespace My_CSharp_AddIn
 
                 oOptions.Value["ExportUnits"] = 0;
 
-                oOptions.Value["Resolution"] = Resolution;
+                oOptions.Value["Resolution"] = Resolution; // Resolution export models
 
                 oOptions.Value["SurfaceDeviation"] = 0.16;
 

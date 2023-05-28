@@ -45,57 +45,24 @@ namespace My_CSharp_AddIn
 
         }
 
-     
-
-        /*private void button1_Click(object sender, EventArgs e)
+        private void ExportButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string Name = m_inventorAplication.ActiveDocument.DisplayName;
-
-                try
-                {
-
-                    //Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-                    //getComponent(ASs.ComponentDefinition.Occurrences, "no");
-
-                    path = PathTextBox.Text + "\\" + m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult";
-
-                    AssemblyRecord assemblyRecord = new AssemblyRecord();
-
-                    assemblyRecord.GetAssemble(path);
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            catch (Exception)
-            {
-
-                MessageBox.Show("The assembly is not open");
-            }
-
-        }*/
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-
-            if(m_inventorAplication.ActiveDocument == null)
+            //Checking that a document is open
+            if (m_inventorAplication.ActiveDocument == null)
             {
             
                 MessageBox.Show("The assembly is not open");
                 return;
             }
 
+            //Checking that the document assembly is open 
             if (m_inventorAplication.ActiveDocument.DocumentType != Inventor.DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 MessageBox.Show("The assembly is not open");
                 return;
             }
 
+            //Checking that the path line is not empty 
             if (!(string.IsNullOrEmpty(PathTextBox.Text) || string.IsNullOrWhiteSpace(PathTextBox.Text)))
             { 
                 int counter = 0;
@@ -121,7 +88,6 @@ namespace My_CSharp_AddIn
                {
 
                    AssemblyRecord assemblyRecord = new AssemblyRecord();
-
                    assemblyRecord.GetAssemble(path);
 
                }
@@ -159,47 +125,6 @@ namespace My_CSharp_AddIn
             {
                 MessageBox.Show("The path is not chosen");
             }
-            
-
-           /* Inventor.TransientObjects oTO = m_inventorAplication.TransientObjects;
-            Inventor.TranslationContext oContext = oTO.CreateTranslationContext();
-
-            Inventor.ApplicationAddIn oAppAddin = m_inventorAplication.ApplicationAddIns.ItemById["{F539FB09-FC01-4260-A429-1818B14D6BAC}"];
-
-
-            Inventor.TranslatorAddIn addIn = (Inventor.TranslatorAddIn)oAppAddin;
-
-            oContext.Type = Inventor.IOMechanismEnum.kFileBrowseIOMechanism;
-
-            Inventor.NameValueMap oOptions = oTO.CreateNameValueMap();
-
-            Inventor.DataMedium oDataMedium = oTO.CreateDataMedium();
-
-            oOptions.Value["ExportUnits"] = 0;
-
-            oOptions.Value["Resolution"] = 3;
-
-            oOptions.Value["SurfaceDeviation"] = 0.16;
-
-            oOptions.Value["NormalDeviation"] = 1500;
-
-            oOptions.Value["MaxEdgeLength"] = 100000;
-
-            oOptions.Value["AspectRatio"] = 2150;
-
-            oOptions.Value["ExportFileStructure"] = 1;
-
-            oDataMedium.FileName = System.IO.Path.ChangeExtension(PATH +"\\Parts\\" +oAssDoc.DisplayName, ".obj");
-
-            try
-            {
-                addIn.SaveCopyAs(oAssDoc, oContext, oOptions, oDataMedium);
-            }
-            catch (Exception ex )
-            {
-
-                MessageBox.Show(ex.Message);
-            }*/
         }
 
         private void PathBut_Click(object sender, EventArgs e)
