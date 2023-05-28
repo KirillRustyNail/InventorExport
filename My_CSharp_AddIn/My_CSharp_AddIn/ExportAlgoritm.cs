@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace My_CSharp_AddIn
 {
     class ExportAlgoritm
@@ -32,7 +33,7 @@ namespace My_CSharp_AddIn
                 {
                     ExportIndividually(ASs.ComponentDefinition.Occurrences, path , Resolution);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -276,5 +277,7 @@ namespace My_CSharp_AddIn
 
 
         }
+
+
     }
 }

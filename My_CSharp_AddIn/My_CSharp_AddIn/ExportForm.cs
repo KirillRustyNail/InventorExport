@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Collections;
 using Microsoft.VisualBasic.Compatibility.VB6;
 using System.IO;
+using System.IO.Compression;
 
 namespace My_CSharp_AddIn
 {
@@ -68,6 +69,7 @@ namespace My_CSharp_AddIn
                 int counter = 0;
                 string Filename = m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult";
                 string TempFileName = Filename;
+                bool Success = false;
 
                 while (Directory.Exists(Path.Combine(PathTextBox.Text, TempFileName)))
                 {
@@ -115,11 +117,20 @@ namespace My_CSharp_AddIn
                    ExportAlgoritm export = new ExportAlgoritm();
                    export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
                    MessageBox.Show("Successfully");
+                   Success = true;
+
+
                }
                catch (Exception ex)
                {
                    MessageBox.Show("Error "+ ex.Message);
-               }               
+               }
+
+                if (Success)
+                {
+                    string Zipfilename = path.Substring(0, path.Length - 1) + ".zip";
+                    ZipFile.CreateFromDirectory(path, Zipfilename);
+                }
             }
             else
             {
