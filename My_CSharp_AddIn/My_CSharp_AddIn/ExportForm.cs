@@ -118,8 +118,6 @@ namespace My_CSharp_AddIn
                    export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
                    MessageBox.Show("Successfully");
                    Success = true;
-
-
                }
                catch (Exception ex)
                {
