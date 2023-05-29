@@ -16,7 +16,7 @@ namespace My_CSharp_AddIn
         public void RemoveFiller(double filletRadius)
         {
             Inventor.AssemblyDocument ASs = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
-            FilletRadius = filletRadius/100;
+            FilletRadius = filletRadius/10;
 
             Simple(ASs.ComponentDefinition.Occurrences);
         }
