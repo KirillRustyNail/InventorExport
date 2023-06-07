@@ -208,7 +208,7 @@ namespace My_CSharp_AddIn
             Coordinates coordinates;
             string NameOne;
             string NameTwo;
-
+           
             while (objconEnum.MoveNext() == true)
             {
                 connection = null;
@@ -217,33 +217,53 @@ namespace My_CSharp_AddIn
                 oAsscon = (Inventor.AssemblyConstraint)objconEnum.Current;
 
                 string Type = oAsscon.Name;
-
+                
                 Inventor.ComponentOccurrence One = (Inventor.ComponentOccurrence)oAsscon.OccurrenceOne;
                 Inventor.ComponentOccurrence Two = (Inventor.ComponentOccurrence)oAsscon.OccurrenceTwo;
+
 
                 if (One != null && Two != null)
                 {
                     NameOne = One._DisplayName;
                     NameTwo = Two._DisplayName;
 
-                    /*if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
+                    if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
                     {
                         Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
-
+                        
+                        
                         Inventor.FaceProxy faceProxy = (Inventor.FaceProxy)mateConstraint.EntityTwo;
                         if (faceProxy != null)
                         {
                             foreach (Inventor.Vertex vertex in faceProxy.NativeObject.Vertices)
                             {
-                                var v = vertex.Point.X;
-                                coordinates = new Coordinates(vertex.Point.X, vertex.Point.Y, vertex.Point.Z);
+                                var ptX = vertex.Point.X * 10.0;
+                                var ptY = vertex.Point.Y * 10.0;
+                                var ptZ = vertex.Point.Z * 10.0; 
+
+                                coordinates = new Coordinates(ptX, ptY, ptZ);
                             }
                         }
+
+                        //Inventor.MateConstraintProxy mateConstraintProxy = (Inventor.MateConstraintProxy)mateConstraint;
+
+                        foreach (Inventor.Face face in faceProxy.NativeObject.FaceShell.Faces)
+                        {
+
+                            var ptX = face.PointOnFace.X * 10.0;
+                            var ptY = face.PointOnFace.Y * 10.0;
+                            var ptZ = face.PointOnFace.Z * 10.0;
+
+                            MessageBox.Show("X:" + ptX + "Y: " + ptY + "Z: " + ptZ);
+                        }
+
+
+
                     }
 
-                    *//* Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
-                     Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;
-                     Inventor.InsertConstraint insertConstraint = (Inventor.InsertConstraint)oAsscon;*//**/
+                    /*Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
+                    Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;
+                    Inventor.InsertConstraint insertConstraint = (Inventor.InsertConstraint)oAsscon;*/
 
                 }
                 else 
