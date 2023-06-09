@@ -83,18 +83,13 @@ namespace My_CSharp_AddIn
 
                 Inventor.MassProperties mass = objOc.MassProperties;
 
-                /*double centerX = mass.CenterOfMass.X * 10.0;
-                double centerY = mass.CenterOfMass.Y * 10.0;
-                double centerZ = mass.CenterOfMass.Z * 10.0;*/
-                
-
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
                 var ptZ = objOc.Transformation.Translation.Z * 10.0;
 
                 matrix = objOc.Transformation;
 
-                /*x1 = matrix.Cell[1, 1];
+                x1 = matrix.Cell[1, 1];
                 x2 = matrix.Cell[1, 2];
                 x3 = matrix.Cell[1, 3];
 
@@ -104,19 +99,21 @@ namespace My_CSharp_AddIn
 
                 z1 = matrix.Cell[3, 1];
                 z2 = matrix.Cell[3, 2];
-                z3 = matrix.Cell[3, 3];*/
-
-                x1 = matrix.Cell[1, 1];
-                x2 = matrix.Cell[2, 1];
-                x3 = matrix.Cell[3, 1];
-
-                y1 = matrix.Cell[1, 2];
-                y2 = matrix.Cell[2, 2];
-                y3 = matrix.Cell[3, 2];
-
-                z1 = matrix.Cell[1, 3];
-                z2 = matrix.Cell[2, 3];
                 z3 = matrix.Cell[3, 3];
+
+                CalculateRotation(matrix, objOc._DisplayName);
+
+                /* x1 = matrix.Cell[1, 1];
+                 x2 = matrix.Cell[2, 1];
+                 x3 = matrix.Cell[3, 1];
+
+                 y1 = matrix.Cell[1, 2];
+                 y2 = matrix.Cell[2, 2];
+                 y3 = matrix.Cell[3, 2];
+
+                 z1 = matrix.Cell[1, 3];
+                 z2 = matrix.Cell[2, 3];
+                 z3 = matrix.Cell[3, 3];*/
 
                 xRotationRadians = Math.Atan2(y3, z3);
                 yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
@@ -156,8 +153,6 @@ namespace My_CSharp_AddIn
                 var Test3 = -ZRotationRadians1 * (180 / Math.PI);
                 var Test4 = -ZRotationRadians2 * (180 / Math.PI);
 
-               /* string s = objOc.Name + "\n" + signx1 + " " + signy1 + " " + signz1 + "\n" + signx2 + " " + signy2 + " " + signz2 + "\n" + signx3 + " " + signy3 + " " + signz3 ;
-                MessageBox.Show(s + " \n" + Test1 + " \n" + Test2 + "\n " + Test3 + "\n" + Test4);*/
 
                 ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
                 Rotations = new Coordinates(xRotation, yRotation, zRotation);
@@ -170,7 +165,6 @@ namespace My_CSharp_AddIn
                     TempSubAssembly = GetComponent((Inventor.ComponentOccurrences)objOc.SubOccurrences, "Sub" , objOc._DisplayName);
                     isAssemble = true;
                 }
-                
 
                 List<Connection> connections;
                 connections = GetConstrains(objconEnum);
@@ -187,15 +181,11 @@ namespace My_CSharp_AddIn
                     SubComponents.Add(currentComponent);
                 }
                 
-
             }
 
             SubAssembly = new Assembly(SubAssebmbleName, SubComponents);
 
             return SubAssembly;
-
-
-
 
         }
 
@@ -206,6 +196,12 @@ namespace My_CSharp_AddIn
             List<Connection> connections = new List<Connection>();
             Connection connection;
             Coordinates coordinates;
+
+            double MinOneX, MinOneY, MinOneZ, MinTwoX, MinTwoY, MinTwoZ;
+            double MaxOneX, MaxOneY, MaxOneZ, MaxTwoX, MaxTwoY, MaxTwoZ;
+            double MinX, MinY, MinZ, MaxX, MaxY, MaxZ;
+            double X_avg, Y_avg, Z_avg;
+
             string NameOne;
             string NameTwo;
            
@@ -221,50 +217,57 @@ namespace My_CSharp_AddIn
                 Inventor.ComponentOccurrence One = (Inventor.ComponentOccurrence)oAsscon.OccurrenceOne;
                 Inventor.ComponentOccurrence Two = (Inventor.ComponentOccurrence)oAsscon.OccurrenceTwo;
 
-
+                
                 if (One != null && Two != null)
                 {
                     NameOne = One._DisplayName;
                     NameTwo = Two._DisplayName;
 
-                    if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
+                    MinOneX = One.RangeBox.MinPoint.X;
+                    MinOneY = One.RangeBox.MinPoint.Y;
+                    MinOneZ = One.RangeBox.MinPoint.Z;
+
+                    MaxOneX = One.RangeBox.MaxPoint.X;
+                    MaxOneY = One.RangeBox.MaxPoint.Y;
+                    MaxOneZ = One.RangeBox.MaxPoint.Z;
+
+                    MinTwoX = Two.RangeBox.MinPoint.X;
+                    MinTwoY = Two.RangeBox.MinPoint.Y;
+                    MinTwoZ = Two.RangeBox.MinPoint.Z;
+
+                    MaxTwoX = Two.RangeBox.MaxPoint.X;
+                    MaxTwoY = Two.RangeBox.MaxPoint.Y;
+                    MaxTwoZ = Two.RangeBox.MaxPoint.Z;
+
+                    MinX = Math.Max(MinOneX, MinTwoX);
+                    MinY = Math.Max(MinOneY, MinTwoY);
+                    MinZ = Math.Max(MinOneZ, MinTwoZ);
+
+                    MaxX = Math.Min(MaxOneX, MaxTwoX);
+                    MaxY = Math.Min(MaxOneY, MaxTwoY);
+                    MaxZ = Math.Min(MaxOneZ, MaxTwoZ);
+
+
+                    X_avg = (MinX + MaxX) / 2;
+                    Y_avg = (MinY + MaxY) / 2;
+                    Z_avg = (MinZ + MaxZ) / 2;
+
+                    
+                    coordinates = new Coordinates(X_avg*10, Y_avg*10, Z_avg* 10);
+
+                    /*if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
                     {
                         Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
-                        
-                        
+
                         Inventor.FaceProxy faceProxy = (Inventor.FaceProxy)mateConstraint.EntityTwo;
                         if (faceProxy != null)
                         {
-                            foreach (Inventor.Vertex vertex in faceProxy.NativeObject.Vertices)
-                            {
-                                var ptX = vertex.Point.X * 10.0;
-                                var ptY = vertex.Point.Y * 10.0;
-                                var ptZ = vertex.Point.Z * 10.0; 
+                            Inventor.WorkAxisProxy oAxis = null;
 
-                                coordinates = new Coordinates(ptX, ptY, ptZ);
-                            }
+                            oAxis = (Inventor.WorkAxisProxy)oAsscon.EntityOne;
+
                         }
-
-                        //Inventor.MateConstraintProxy mateConstraintProxy = (Inventor.MateConstraintProxy)mateConstraint;
-
-                        foreach (Inventor.Face face in faceProxy.NativeObject.FaceShell.Faces)
-                        {
-
-                            var ptX = face.PointOnFace.X * 10.0;
-                            var ptY = face.PointOnFace.Y * 10.0;
-                            var ptZ = face.PointOnFace.Z * 10.0;
-
-                            MessageBox.Show("X:" + ptX + "Y: " + ptY + "Z: " + ptZ);
-                        }
-
-
-
-                    }
-
-                    /*Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
-                    Inventor.AngleConstraint angleConstraint = (Inventor.AngleConstraint)oAsscon;
-                    Inventor.InsertConstraint insertConstraint = (Inventor.InsertConstraint)oAsscon;*/
-
+                    }*/
                 }
                 else 
                 {
@@ -272,14 +275,51 @@ namespace My_CSharp_AddIn
                     NameTwo = "null";
                 }
 
-                /*NameOne = "null";
-                NameTwo = "null";*/
-
                 connection = new Connection(NameOne, NameTwo, Type, coordinates);
                 connections.Add(connection);
             }
 
             return connections;
         }
+
+
+        void CalculateRotation(Inventor.Matrix matrix , string name)
+        {
+           
+            double aRotAnglesX, aRotAnglesY, aRotAnglesZ;
+
+            double x1, x2, x3, y1, y2, y3, z1, z2, z3;
+
+            x1 = matrix.Cell[1, 1];
+            x2 = matrix.Cell[2, 1];
+            x3 = matrix.Cell[3, 1];
+
+            y1 = matrix.Cell[1, 2];
+            y2 = matrix.Cell[2, 2];
+            y3 = matrix.Cell[2, 3];
+
+            z1 = matrix.Cell[1, 3];
+            z2 = matrix.Cell[2, 3];
+            z3 = matrix.Cell[3, 3];
+
+
+            /*aRotAnglesX = Math.Atan2(z2, z3);
+            aRotAnglesY = 
+
+
+            aRotAnglesX = aRotAnglesX * (180 / Math.PI);
+            aRotAnglesY = aRotAnglesY * (180 / Math.PI);
+            aRotAnglesZ = aRotAnglesZ * (180 / Math.PI);*/
+
+            /*xRotationRadians = Math.Atan2(y3, z3);
+            yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
+            yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
+            zRotationRadians = Math.Atan2(x2, x1);
+            zRotationRadians = Math.Atan2(y1, -y2);*/
+
+            MessageBox.Show(name + "\n" +"X = " + aRotAnglesX + " \n" + "Y = " + aRotAnglesY + " \n" + "Z = " + aRotAnglesZ + " \n");
+        }
+
+   
     }
 }
