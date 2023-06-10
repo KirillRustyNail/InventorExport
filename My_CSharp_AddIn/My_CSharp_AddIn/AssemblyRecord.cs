@@ -99,6 +99,10 @@ namespace My_CSharp_AddIn
 
                 objOc = (Inventor.ComponentOccurrence)Em.Current;
 
+                Inventor.ComponentOccurrences temp = (Inventor.ComponentOccurrences)objOc.SubOccurrences;
+                
+                Inventor.WorkPlane Part_YZ, Part_XZ,  Part_XY;
+                Inventor.MeasureTools oTool = Globals.invApp.MeasureTools;
 
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
@@ -108,44 +112,48 @@ namespace My_CSharp_AddIn
 
               
                 var RoatationAgles = CalculateRotation(matrix, objOc._DisplayName);
+                
+                Part_XZ = null;
 
-                /*x1 = matrix.Cell[1, 1];
-                x2 = matrix.Cell[2, 1];
-                x3 = matrix.Cell[3, 1];
-
-                y1 = matrix.Cell[1, 2];
-                y2 = matrix.Cell[2, 2];
-                y3 = matrix.Cell[3, 2];
-
-                z1 = matrix.Cell[1, 3];
-                z2 = matrix.Cell[2, 3];
-                z3 = matrix.Cell[3, 3];
-*/
-               /* xRotationRadians = Math.Atan2(y3, z3);
-                yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
-
-                if (signx3 >= 1)
-                { 
-                    zRotationRadians = Math.Atan2(x2, x1);
-                }
-                else 
+                if (temp.Count > 0)
                 {
-                    zRotationRadians = Math.Atan2(y1, -y2);
+                    Inventor.AssemblyComponentDefinition AsscomponentDefinition = (Inventor.AssemblyComponentDefinition)objOc.Definition;
+
+                    foreach (Inventor.WorkPlane plane1 in AsscomponentDefinition.WorkPlanes)
+                    {
+                        if (plane1.Name == "YZ Plane") Part_YZ = plane1;
+                        if (plane1.Name == "XZ Plane") Part_XZ = plane1;
+                        if (plane1.Name == "XY Plane") Part_XY = plane1;
+                    }
                 }
+                else
+                {
+                    Inventor.PartComponentDefinition part = (Inventor.PartComponentDefinition)objOc.Definition;
 
-                xRotation = -xRotationRadians * (180 / Math.PI);
-                yRotation = yRotationRadians * (180 / Math.PI);
-                zRotation = -zRotationRadians * (180 / Math.PI);*/
+                    foreach (Inventor.WorkPlane plane1 in part.WorkPlanes)
+                    {
+                        if (plane1.Name == "YZ Plane") Part_YZ = plane1;
+                        if (plane1.Name == "XZ Plane") Part_XZ = plane1;
+                        if (plane1.Name == "XY Plane") Part_XY = plane1;
+                    }
+                }
+                   
 
+                Object workPlaneProxy = null;
 
+                objOc.CreateGeometryProxy(Part_XZ, out workPlaneProxy);
+
+                var angle = oTool.GetAngle(XZ, workPlaneProxy);
+
+                angle = (angle * 180) / Math.PI;
 
                 ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
-                Rotations = new Coordinates(RoatationAgles[0], RoatationAgles[1], RoatationAgles[2]);
+                Rotations = new Coordinates(RoatationAgles[0], RoatationAgles[1], -angle);
 
                 
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
-                Inventor.ComponentOccurrences temp = (Inventor.ComponentOccurrences)objOc.SubOccurrences;
+                
 
                 if (temp.Count>0)
                 { 
