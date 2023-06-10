@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using My_CSharp_AddIn.Models;
+using My_CSharp_AddIn.Classes;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
@@ -15,6 +15,11 @@ namespace My_CSharp_AddIn
     {
         public Assembly CurrentAssembly;
         public List<Component> components = new List<Component>();
+        /*public List<MatrixRot> Test = new List<MatrixRot>();*/
+        Inventor.WorkPlanes oAssyPlane;
+        Inventor.WorkPlane YZ;
+        Inventor.WorkPlane XZ;
+        Inventor.WorkPlane XY;
         public string JsonPath;
         public void GetAssemble(string path)
         {
@@ -26,9 +31,20 @@ namespace My_CSharp_AddIn
 
             try
             {
+                
                 Inventor.AssemblyDocument assemblyDocument = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
+                Inventor.AssemblyComponentDefinition componentDefinition = (Inventor.AssemblyComponentDefinition)assemblyDocument.ComponentDefinition;
+                oAssyPlane = componentDefinition.WorkPlanes;
+                foreach (Inventor.WorkPlane plane in oAssyPlane)
+                {
+                    if (plane.Name == "YZ Plane") YZ = plane;
+                    if (plane.Name == "XZ Plane") XZ = plane;
+                    if (plane.Name == "XY Plane") XY = plane;
+                }
+                
                 GetComponent(assemblyDocument.ComponentDefinition.Occurrences, "no" , " ");
                 CurrentAssembly = new Assembly(CurrentAssembleName, components);
+                
 
             }
             catch (Exception)
@@ -38,12 +54,11 @@ namespace My_CSharp_AddIn
             }
 
             doJson();
+          
         }
 
         private void doJson()
         {
-           
-
             var assembleJson = JsonConvert.SerializeObject(CurrentAssembly);
             var pathOut = Path.Combine(JsonPath, CurrentAssembly.Name.Substring(0, CurrentAssembly.Name.Length - 4) + ".json");
 
@@ -53,6 +68,8 @@ namespace My_CSharp_AddIn
             }
             File.WriteAllText(pathOut, assembleJson);
         }
+
+   
 
         private Assembly GetComponent(Inventor.ComponentOccurrences incollect, string SUB ,string SubAssebmbleName)
         {
@@ -68,7 +85,8 @@ namespace My_CSharp_AddIn
 
             double x1, x2, x3, y1, y2, y3, z1, z2, z3;
             double xRotationRadians, yRotationRadians, zRotationRadians;
-            double xRotation, yRotation, zRotation;
+            double xRotation, yRotation, zRotation ;
+            double xRot, yRot, zRot;
 
             Inventor.Matrix matrix;
 
@@ -81,7 +99,6 @@ namespace My_CSharp_AddIn
 
                 objOc = (Inventor.ComponentOccurrence)Em.Current;
 
-                Inventor.MassProperties mass = objOc.MassProperties;
 
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
@@ -89,46 +106,23 @@ namespace My_CSharp_AddIn
 
                 matrix = objOc.Transformation;
 
-                x1 = matrix.Cell[1, 1];
-                x2 = matrix.Cell[1, 2];
-                x3 = matrix.Cell[1, 3];
+              
+                var RoatationAgles = CalculateRotation(matrix, objOc._DisplayName);
 
-                y1 = matrix.Cell[2, 1];
+                /*x1 = matrix.Cell[1, 1];
+                x2 = matrix.Cell[2, 1];
+                x3 = matrix.Cell[3, 1];
+
+                y1 = matrix.Cell[1, 2];
                 y2 = matrix.Cell[2, 2];
-                y3 = matrix.Cell[2, 3];
+                y3 = matrix.Cell[3, 2];
 
-                z1 = matrix.Cell[3, 1];
-                z2 = matrix.Cell[3, 2];
+                z1 = matrix.Cell[1, 3];
+                z2 = matrix.Cell[2, 3];
                 z3 = matrix.Cell[3, 3];
-
-                CalculateRotation(matrix, objOc._DisplayName);
-
-                /* x1 = matrix.Cell[1, 1];
-                 x2 = matrix.Cell[2, 1];
-                 x3 = matrix.Cell[3, 1];
-
-                 y1 = matrix.Cell[1, 2];
-                 y2 = matrix.Cell[2, 2];
-                 y3 = matrix.Cell[3, 2];
-
-                 z1 = matrix.Cell[1, 3];
-                 z2 = matrix.Cell[2, 3];
-                 z3 = matrix.Cell[3, 3];*/
-
-                xRotationRadians = Math.Atan2(y3, z3);
+*/
+               /* xRotationRadians = Math.Atan2(y3, z3);
                 yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
-
-
-                int signx1 = Math.Sign(x1);
-                int signx2 = Math.Sign(x2);
-                int signx3 = Math.Sign(x3);
-                int signy1 = Math.Sign(y1);
-                int signy2 = Math.Sign(y2);
-                int signy3 = Math.Sign(y3);
-                int signz1 = Math.Sign(z1);
-                int signz2 = Math.Sign(z2);
-                int signz3 = Math.Sign(z3);
-
 
                 if (signx3 >= 1)
                 { 
@@ -141,21 +135,14 @@ namespace My_CSharp_AddIn
 
                 xRotation = -xRotationRadians * (180 / Math.PI);
                 yRotation = yRotationRadians * (180 / Math.PI);
-                zRotation = -zRotationRadians * (180 / Math.PI);
+                zRotation = -zRotationRadians * (180 / Math.PI);*/
 
-                var XRotationRadians1 = Math.Atan2(y3, z3);
-                var YRotationRadians1 = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
-                var ZRotationRadians1 = Math.Atan2(x2, x1);
-                var ZRotationRadians2 = Math.Atan2(y1, -y2);
-
-                var Test1 = -XRotationRadians1 * (180 / Math.PI);
-                var Test2 = -YRotationRadians1 * (180 / Math.PI);
-                var Test3 = -ZRotationRadians1 * (180 / Math.PI);
-                var Test4 = -ZRotationRadians2 * (180 / Math.PI);
 
 
                 ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
-                Rotations = new Coordinates(xRotation, yRotation, zRotation);
+                Rotations = new Coordinates(RoatationAgles[0], RoatationAgles[1], RoatationAgles[2]);
+
+                
 
                 IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
                 Inventor.ComponentOccurrences temp = (Inventor.ComponentOccurrences)objOc.SubOccurrences;
@@ -255,19 +242,6 @@ namespace My_CSharp_AddIn
                     
                     coordinates = new Coordinates(X_avg*10, Y_avg*10, Z_avg* 10);
 
-                    /*if (oAsscon.Type == Inventor.ObjectTypeEnum.kMateConstraintObject)
-                    {
-                        Inventor.MateConstraint mateConstraint = (Inventor.MateConstraint)oAsscon;
-
-                        Inventor.FaceProxy faceProxy = (Inventor.FaceProxy)mateConstraint.EntityTwo;
-                        if (faceProxy != null)
-                        {
-                            Inventor.WorkAxisProxy oAxis = null;
-
-                            oAxis = (Inventor.WorkAxisProxy)oAsscon.EntityOne;
-
-                        }
-                    }*/
                 }
                 else 
                 {
@@ -283,12 +257,13 @@ namespace My_CSharp_AddIn
         }
 
 
-        void CalculateRotation(Inventor.Matrix matrix , string name)
+        List<double> CalculateRotation(Inventor.Matrix matrix , string name)
         {
            
             double aRotAnglesX, aRotAnglesY, aRotAnglesZ;
 
             double x1, x2, x3, y1, y2, y3, z1, z2, z3;
+            double[] trans = new double[12];
 
             x1 = matrix.Cell[1, 1];
             x2 = matrix.Cell[2, 1];
@@ -296,28 +271,55 @@ namespace My_CSharp_AddIn
 
             y1 = matrix.Cell[1, 2];
             y2 = matrix.Cell[2, 2];
-            y3 = matrix.Cell[2, 3];
+            y3 = matrix.Cell[3, 2];
 
             z1 = matrix.Cell[1, 3];
             z2 = matrix.Cell[2, 3];
             z3 = matrix.Cell[3, 3];
 
+            double EulerOne, EulerTwo, EulerThree;
 
-            /*aRotAnglesX = Math.Atan2(z2, z3);
-            aRotAnglesY = 
+            matrix.GetMatrixData(ref trans);
+
+            matrix.Invert();
+
+            matrix.GetMatrixData(ref trans);
+
+            if (trans[8] != 1 && trans[8] != -1)
+                EulerOne = Math.Atan2(trans[9] / Math.Cos(Math.Asin(trans[8])), trans[10] / Math.Cos(Math.Asin(trans[8])));
+            else if (trans[8] == -1)
+                EulerOne = Math.Atan2(trans[1], trans[2]);
+            else
+                EulerOne = Math.Atan2(-trans[1], -trans[2]);
+
+            if (trans[8] != 1 && trans[8] != -1)
+                EulerTwo = -Math.Asin(trans[8]);
+            else if (trans[8] == -1)
+                EulerTwo = Math.PI / 2;
+            else
+                EulerTwo = -Math.PI / 2;
+
+            if (trans[8] != 1 && trans[8] != -1)
+                EulerThree = Math.Atan2(trans[4] / Math.Cos(Math.Asin(trans[8])), trans[0] / Math.Cos(Math.Asin(trans[8])));
+            else
+                EulerThree = 0;
+
+            string res1 = x1 + ", " + x2 + ", " + x3;  
+            string res2 = y1 + ", " + y2 + ", " + y3;
+            string res3 = z1 + ", " + z2 + ", " + z3;
 
 
-            aRotAnglesX = aRotAnglesX * (180 / Math.PI);
-            aRotAnglesY = aRotAnglesY * (180 / Math.PI);
-            aRotAnglesZ = aRotAnglesZ * (180 / Math.PI);*/
+            EulerOne = -EulerOne * (180 / Math.PI);
+            EulerTwo = EulerTwo * (180 / Math.PI);
+            EulerThree = -EulerThree * (180 / Math.PI);
+            List<double> res = new List<double> { EulerOne, EulerTwo, EulerThree };
 
-            /*xRotationRadians = Math.Atan2(y3, z3);
-            yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
-            yRotationRadians = Math.Atan2(-x3, Math.Sqrt(y3 * y3 + z3 * z3));
-            zRotationRadians = Math.Atan2(x2, x1);
-            zRotationRadians = Math.Atan2(y1, -y2);*/
+            return res;
 
-            MessageBox.Show(name + "\n" +"X = " + aRotAnglesX + " \n" + "Y = " + aRotAnglesY + " \n" + "Z = " + aRotAnglesZ + " \n");
+           /* MatrixRot rot = new MatrixRot(res1 , res2, res3, name);
+
+            Test.Add(rot);*/
+
         }
 
    
