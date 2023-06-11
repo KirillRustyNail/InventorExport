@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace My_CSharp_AddIn.Classes
+namespace My_CSharp_AddIn.Models
 {
     class Coordinates
     {

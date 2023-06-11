@@ -81,6 +81,9 @@ namespace My_CSharp_AddIn
                         case "my_first_button":
                             CommandFunctions.RunForm();
                             return;
+                        case "my_second_button":
+                            CommandFunctions.RunFormConnect();
+                            return;
                         default:
                             return;
                     }
@@ -97,7 +100,7 @@ namespace My_CSharp_AddIn
 
             // Declare all buttons here
             ButtonDefinition MyFirstButton;
-          
+            ButtonDefinition MySecondButton;
 
             // This method is called by Inventor when it loads the AddIn. The AddInSiteObject provides access  
             // to the Inventor Application object. The FirstTime flag indicates if the AddIn is loaded for
@@ -121,6 +124,7 @@ namespace My_CSharp_AddIn
                     // ButtonName = create_button(display_text, internal_name, icon_path)
                     CreateButton create_button = new CreateButton (button_template);
                     MyFirstButton = create_button("    Do Export    ", "my_first_button", @"ButtonResources\MyIcon1");
+                    MySecondButton = create_button("    Connection    ", "my_second_button", @"ButtonResources\MyIcon2");
 
                     // Add to the user interface, if it's the first time.
                     if (firstTime)
@@ -189,6 +193,11 @@ namespace My_CSharp_AddIn
                 if (!(MyFirstButton == null))
                 {
                     MyPanel_asm.CommandControls.AddButton(MyFirstButton, true);
+                }
+                // Set up Buttons.
+                if (!(MySecondButton == null))
+                {
+                    MyPanel_asm.CommandControls.AddButton(MySecondButton, true);
                 }
             }
 

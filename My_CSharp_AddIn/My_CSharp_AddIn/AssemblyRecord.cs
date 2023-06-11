@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using My_CSharp_AddIn.Classes;
+using My_CSharp_AddIn.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
@@ -15,7 +15,6 @@ namespace My_CSharp_AddIn
     {
         public Assembly CurrentAssembly;
         public List<Component> components = new List<Component>();
-        /*public List<MatrixRot> Test = new List<MatrixRot>();*/
         Inventor.WorkPlanes oAssyPlane;
         Inventor.WorkPlane YZ;
         Inventor.WorkPlane XZ;
@@ -103,6 +102,7 @@ namespace My_CSharp_AddIn
                 
                 Inventor.WorkPlane Part_YZ, Part_XZ,  Part_XY;
                 Inventor.MeasureTools oTool = Globals.invApp.MeasureTools;
+                
 
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
@@ -110,9 +110,8 @@ namespace My_CSharp_AddIn
 
                 matrix = objOc.Transformation;
 
-              
                 var RoatationAgles = CalculateRotation(matrix, objOc._DisplayName);
-                
+
                 Part_XZ = null;
 
                 if (temp.Count > 0)
@@ -323,11 +322,6 @@ namespace My_CSharp_AddIn
             List<double> res = new List<double> { EulerOne, EulerTwo, EulerThree };
 
             return res;
-
-           /* MatrixRot rot = new MatrixRot(res1 , res2, res3, name);
-
-            Test.Add(rot);*/
-
         }
 
    
