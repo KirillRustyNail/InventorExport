@@ -140,7 +140,7 @@ namespace My_CSharp_AddIn
                     }
 
                     if (Success)
-                    {
+                    { 
                         string Zipfilename = path.Substring(0, path.Length - 1) + ".zip";
                         ZipFile.CreateFromDirectory(path, Zipfilename);
 
@@ -149,7 +149,12 @@ namespace My_CSharp_AddIn
                             var result = await DBWebApi.PostFile(Userkey, Zipfilename);
                             var Status = result[0];
 
-                            MessageBox.Show(Status);
+                            if (Status != "OK")
+                            {
+                                MessageBox.Show("Connection Error \n It was saved only locally ", Status, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                Status_lable.Text = "Connection status: Not connect";
+                                statusCon = "Not connect";
+                            }
                         }
                     }
 
