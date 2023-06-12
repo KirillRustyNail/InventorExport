@@ -37,8 +37,6 @@ namespace My_CSharp_AddIn
 
                         responseText = await response.Content.ReadAsStringAsync();
                         res.Add(response.StatusCode.ToString());
-
-                        Console.WriteLine(response.StatusCode);
                     }
                 }
 
