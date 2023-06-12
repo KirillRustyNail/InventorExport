@@ -15,3 +15,8 @@ After a successful connection a new "ExporforVR" panel will appear , which conta
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
+To assemble the project you need the following 
+
+1) In the project build settings, specify the output path as shown in the figure 
+
+2) In the debugging tab, specify "Run external program" as follows "\Autodesk\Inventor 2019\Bin\Inventor.exe".
