@@ -13,13 +13,13 @@ namespace My_CSharp_AddIn
 {
     class AssemblyRecord
     {
-        public Assembly CurrentAssembly;
-        public List<Component> components = new List<Component>();
-        Inventor.WorkPlanes oAssyPlane;
+        public Assembly CurrentAssembly; // Current Assemble
+        public List<Component> components = new List<Component>(); //components List 
+        Inventor.WorkPlanes oAssyPlane; //temp Plane for count rotation angle 
         Inventor.WorkPlane YZ;
         Inventor.WorkPlane XZ;
         Inventor.WorkPlane XY;
-        public string JsonPath;
+        public string JsonPath; // result path
         public void GetAssemble(string path)
         {
             JsonPath = path;
@@ -28,6 +28,7 @@ namespace My_CSharp_AddIn
 
             string CurrentAssembleName = m_inventorAplication.ActiveDocument.DisplayName;
 
+            // Try write assemle hierarchy
             try
             {
                 
@@ -56,6 +57,7 @@ namespace My_CSharp_AddIn
           
         }
 
+        //Create Json File
         private void doJson()
         {
             var assembleJson = JsonConvert.SerializeObject(CurrentAssembly);
@@ -68,26 +70,21 @@ namespace My_CSharp_AddIn
             File.WriteAllText(pathOut, assembleJson);
         }
 
-   
 
+        //Get each component of the assembly
         private Assembly GetComponent(Inventor.ComponentOccurrences incollect, string SUB ,string SubAssebmbleName)
         {
             IEnumerator Em = incollect.GetEnumerator();
 
-            Inventor.ComponentOccurrence objOc;
-            Coordinates ComponentCoordinates;
+            Inventor.ComponentOccurrence objOc; //current component
+            Coordinates ComponentCoordinates; 
             Coordinates Rotations;
             Assembly SubAssembly = null;
             Assembly TempSubAssembly = null;
             List<Component> SubComponents = new List<Component>();
             bool isAssemble = false;
 
-            double x1, x2, x3, y1, y2, y3, z1, z2, z3;
-            double xRotationRadians, yRotationRadians, zRotationRadians;
-            double xRotation, yRotation, zRotation ;
-            double xRot, yRot, zRot;
-
-            Inventor.Matrix matrix;
+            Inventor.Matrix matrix; // matrix component orientation 
 
             while (Em.MoveNext() == true)
             {
@@ -103,14 +100,13 @@ namespace My_CSharp_AddIn
                 Inventor.WorkPlane Part_YZ, Part_XZ,  Part_XY;
                 Inventor.MeasureTools oTool = Globals.invApp.MeasureTools;
                 
-
                 var ptX = objOc.Transformation.Translation.X * 10.0;
                 var ptY = objOc.Transformation.Translation.Y * 10.0;
                 var ptZ = objOc.Transformation.Translation.Z * 10.0;
 
                 matrix = objOc.Transformation;
 
-                var RoatationAgles = CalculateRotation(matrix, objOc._DisplayName);
+                var RoatationAgles = CalculateRotation(matrix, objOc._DisplayName); // Calculate Rotation angles
 
                 Part_XZ = null;
 
@@ -137,7 +133,6 @@ namespace My_CSharp_AddIn
                     }
                 }
                    
-
                 Object workPlaneProxy = null;
 
                 objOc.CreateGeometryProxy(Part_XZ, out workPlaneProxy);
@@ -146,26 +141,24 @@ namespace My_CSharp_AddIn
 
                 angle = (angle * 180) / Math.PI;
 
-                ComponentCoordinates = new Coordinates(ptX, ptY, ptZ);
-                Rotations = new Coordinates(RoatationAgles[0], RoatationAgles[1], -angle);
+                ComponentCoordinates = new Coordinates(ptX, ptY, ptZ); // add coordinates
+                Rotations = new Coordinates(RoatationAgles[0], RoatationAgles[1], -angle); // add rotation angles
 
-                
 
-                IEnumerator objconEnum = objOc.Constraints.GetEnumerator();
-                
+                IEnumerator objconEnum = objOc.Constraints.GetEnumerator(); // get all component Constraints
 
+                // check that the component is a subassembly 
                 if (temp.Count>0)
                 { 
                     TempSubAssembly = GetComponent((Inventor.ComponentOccurrences)objOc.SubOccurrences, "Sub" , objOc._DisplayName);
                     isAssemble = true;
                 }
 
-                List<Connection> connections;
-                connections = GetConstrains(objconEnum);
+                List<Connection> connections; // List Constraints
+                connections = GetConstrains(objconEnum); //Get each connections
 
                 if (SUB != "Sub")
                 {
-
                      Component currentComponent = new Component(objOc._DisplayName.Replace(":", "_"), ComponentCoordinates,Rotations, connections, isAssemble, TempSubAssembly);
                     components.Add(currentComponent);
                 }
@@ -183,6 +176,7 @@ namespace My_CSharp_AddIn
 
         }
 
+        //Get each Constrains of the component
         private List<Connection> GetConstrains(IEnumerator objconEnum)
         {
             Inventor.AssemblyConstraint oAsscon;
@@ -191,7 +185,7 @@ namespace My_CSharp_AddIn
             Connection connection;
             Coordinates coordinates;
 
-            double MinOneX, MinOneY, MinOneZ, MinTwoX, MinTwoY, MinTwoZ;
+            double MinOneX, MinOneY, MinOneZ, MinTwoX, MinTwoY, MinTwoZ; 
             double MaxOneX, MaxOneY, MaxOneZ, MaxTwoX, MaxTwoY, MaxTwoZ;
             double MinX, MinY, MinZ, MaxX, MaxY, MaxZ;
             double X_avg, Y_avg, Z_avg;
@@ -214,6 +208,8 @@ namespace My_CSharp_AddIn
                 
                 if (One != null && Two != null)
                 {
+                    //Getting the coordinate of the save point of the parts
+
                     NameOne = One._DisplayName;
                     NameTwo = Two._DisplayName;
 
@@ -263,7 +259,7 @@ namespace My_CSharp_AddIn
             return connections;
         }
 
-
+        //Calculate component Rotation angles
         List<double> CalculateRotation(Inventor.Matrix matrix , string name)
         {
            

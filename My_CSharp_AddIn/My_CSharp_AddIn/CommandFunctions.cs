@@ -14,6 +14,8 @@ namespace My_CSharp_AddIn
     {
         static string ConnectionStatus = null;
         static string UserKey = null;
+
+        //ExportForm startup
         public static void RunForm()
         {
             ExportForm frm;
@@ -34,6 +36,7 @@ namespace My_CSharp_AddIn
 
         }
 
+        //Connection form startup
         public static void RunFormConnect()
         {
             ConnectForm Confrm;

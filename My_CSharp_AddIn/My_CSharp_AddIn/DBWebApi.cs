@@ -12,6 +12,8 @@ namespace My_CSharp_AddIn
 {
     class DBWebApi
     {
+        //Get Connect to BD, and authorization
+        //return res[0] - Connection status res[1] - Userkey for post files
         public static async Task<List<string>> GetConnect(string Login, string Password)
         {
             List<string> res = new List<string>(2);
@@ -53,11 +55,12 @@ namespace My_CSharp_AddIn
             }
  
         }
+
+        //Post files to BD
+        //return res[0] - Connection status
         public static async Task<List<string>> PostFile(string userkey, string filepath)
         {
             List<string> res = new List<string>();
-
-            string responseText;
             string name = Path.GetFileName(filepath);
             string pattern = "[^a-zA-Z]";
             string result = Regex.Replace(name, pattern, "");

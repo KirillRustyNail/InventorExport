@@ -13,14 +13,14 @@ namespace My_CSharp_AddIn
     public partial class ConnectForm : Form
     {
     
-        public string Status;
-        public string userid;
+        public string Status;// Connection to BD 
+        public string userid;// User key for post result
         public ConnectForm()
         {
-
             InitializeComponent();
         }
 
+        //Autorization
         async private void Connect_Button_Click(object sender, EventArgs e)
         {
             string Login = Login_text.Text;

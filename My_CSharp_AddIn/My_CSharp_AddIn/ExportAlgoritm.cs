@@ -244,33 +244,6 @@ namespace My_CSharp_AddIn
                         ExportIndividually((Inventor.ComponentOccurrences)objOc.SubOccurrences, SubAssemblePath, Resolution);
                     }
 
-                   /* AssdesiredPart = (Inventor.AssemblyDocument)objOc.Definition.Document;
-
-                    string outPath = path + "\\Parts\\" + AssdesiredPart.DisplayName;
-                    string fileNameObj = outPath.Substring(0, outPath.Length - 4) + ".obj";
-                    string fileNameMtl = outPath.Substring(0, outPath.Length - 4) + ".mtl";
-                    string TrueFileName = objOc.Name;
-
-                    oDataMedium.FileName = System.IO.Path.ChangeExtension(outPath, ".obj");*/
-
-                    /*try
-                    {
-                        addIn.SaveCopyAs(AssdesiredPart, oContext, oOptions, oDataMedium);
-                    }
-                    catch (Exception ex)
-                    {
-
-                        MessageBox.Show(ex.Message);
-                    }
-
-                    if (File.Exists(fileNameObj))
-                    {
-                        File.Move(fileNameObj, path + "\\Parts\\" + TrueFileName.Replace(":", "_") + ".obj");
-
-                        if (File.Exists(fileNameMtl))
-                        {
-                            File.Move(fileNameMtl, path + "\\Parts\\" + TrueFileName.Replace(":", "_") + ".mtl");
-                        }*/
                 }
             }
 

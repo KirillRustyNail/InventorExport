@@ -17,8 +17,8 @@ namespace My_CSharp_AddIn
     public partial class ExportForm : Form
     {
         private Inventor.Application m_inventorAplication;
-        private string statusCon;
-        private string Userkey;
+        private string statusCon; // Connection to BD status
+        private string Userkey; // User key for post result
 
         public string path;
         public ExportForm(Inventor.Application application , string status, string userkey)
@@ -57,6 +57,7 @@ namespace My_CSharp_AddIn
         {
             DialogResult dr= new DialogResult();
 
+            //Checking that the connection to the database is positive
             if (statusCon != "OK") dr = MessageBox.Show("The connection has not been established. The export will only be local.", "Export", MessageBoxButtons.YesNo);
             else dr = DialogResult.Yes;
 
@@ -81,10 +82,11 @@ namespace My_CSharp_AddIn
                 //Checking that the path line is not empty 
                 if (!(string.IsNullOrEmpty(PathTextBox.Text) || string.IsNullOrWhiteSpace(PathTextBox.Text)))
                 {
-                    int counter = 0;
+                    int counter = 0; //count file with the same name
                     string Filename = m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult";
                     string TempFileName = Filename;
-                    bool Success = false;
+                    bool SuccessWriteJson = false;// Success write Json file
+                    bool SuccessExport = false; // Success export
 
                     while (Directory.Exists(Path.Combine(PathTextBox.Text, TempFileName)))
                     {
@@ -100,12 +102,13 @@ namespace My_CSharp_AddIn
                     {
                         path = PathTextBox.Text + "\\" + m_inventorAplication.ActiveDocument.DisplayName.Substring(0, m_inventorAplication.ActiveDocument.DisplayName.Length - 4) + "_ExportResult\\";
                     }
-
+                    
+                    // try write assemble json file
                     try
                     {
-
                         AssemblyRecord assemblyRecord = new AssemblyRecord();
                         assemblyRecord.GetAssemble(path);
+                        SuccessWriteJson = true;
 
                     }
                     catch (Exception ex)
@@ -113,6 +116,7 @@ namespace My_CSharp_AddIn
                         MessageBox.Show(ex.Message);
                     }
 
+                    //try remove fillet
                     try
                     {
                         FilletRemover rem = new FilletRemover();
@@ -127,19 +131,20 @@ namespace My_CSharp_AddIn
                         MessageBox.Show("Error " + ex.Message);
                     }
 
+                    //try export assembly
                     try
                     {
                         ExportAlgoritm export = new ExportAlgoritm();
                         export.DoExport(path, ResolutionComBox.SelectedIndex, DoSubAssembleComBox.SelectedIndex);
-                        MessageBox.Show("Successfully");
-                        Success = true;
+                        SuccessExport = true;
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Error " + ex.Message);
                     }
 
-                    if (Success)
+                    //try create zip file
+                    if (SuccessExport && SuccessWriteJson)
                     { 
                         string Zipfilename = path.Substring(0, path.Length - 1) + ".zip";
                         ZipFile.CreateFromDirectory(path, Zipfilename);
@@ -158,6 +163,11 @@ namespace My_CSharp_AddIn
                         }
                     }
 
+                    if(SuccessExport && SuccessWriteJson) MessageBox.Show("Success export");
+                    if(SuccessExport && !SuccessWriteJson) MessageBox.Show("Success export, but Json file write incorrectly");
+                    if(!SuccessExport && SuccessWriteJson) MessageBox.Show("Export incorrectly, but Json file write success");
+                    if(!SuccessExport && !SuccessWriteJson) MessageBox.Show("Export Failed");
+
 
                 }
                 else
@@ -167,6 +177,7 @@ namespace My_CSharp_AddIn
             }
         }
 
+        //Set file path 
         private void PathBut_Click(object sender, EventArgs e)
         {
             Inventor.AssemblyDocument oAssDoc = (Inventor.AssemblyDocument)m_inventorAplication.ActiveDocument;
